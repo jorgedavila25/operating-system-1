@@ -4,7 +4,7 @@ class Device
   attr_accessor :queue
   
   def initialize
-    @queue = Queue.new
+    @number_of_pcb = Queue.new
     puts "hi, I'm a #{base}"
   end
   

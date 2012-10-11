@@ -44,8 +44,7 @@ class Os
       arrival_of_process if @command == 'A'
       snapshot_mode if @command == 'S'
       terminate_process if @command == 't'
-      #TODO: Handle the p1 and P1 and the like 
-
+      handle_system_request(@command) if /[pcdPCD]/.match(@command[0])
     end
   end
 
@@ -78,39 +77,50 @@ class Os
   def generate_printers(num)
     @printers = Queue.new
     num.times{ @printers << Printer.new }
-    puts "#{@printers.length} is the number of printers in the  queue"
   end
 
   def generate_disks(num)
     @disks = Queue.new
     num.times{ @disks << Disk.new } 
-    puts "#{@disks.length} is the number of disks in the  queue"
   end
 
   def generate_rewriteables(num)
     @rewriteables = Queue.new
     num.times{ @rewriteables << Rewriteable.new }
-    puts "#{@rewriteables.length} is the number of rewriteables in the queue"
   end
 
-  def generate_rewriteables(num)
-    puts "#{num} of rewriteable generated"
+  def handle_system_request(param)
+    @request = param.partition(/[pcd]/i).reject!{ |c| c.empty? }
+    system_call(@request[0], @request[1].to_i) if check_if_its_upper(@request[0]) == false
+    signal_completion(@request[0], @request[1].to_i) if check_if_its_upper(@request[0]) == true
   end
 
+  def system_call(device, num)
+    puts "made it to system call"
+    puts "this is the number of PCB #{num}"
+    puts "this is the device of PCB #{device}"
+  end
+
+  def signal_completion(device, num)
+    puts "made it to completion"
+    puts "this is the number of PCB #{num}"
+    puts "this is the device of PCB #{device}"
+  end
+  
   def show_pids_processes_in_ready_queue
     puts "Should show pids in the ready queue"
   end
 
   def show_pids_and_printer_device_queue_info
-    puts "show printer info"
+    puts "#{@printers.length} is the number of printers in the  queue"
   end
 
   def show_pids_and_disk_device_queue_info
-    puts "show disk info"
+    puts "#{@disks.length} is the number of disks in the  queue"
   end  
 
   def show_pids_and_rewriteable_device_queue_info
-    puts "show rewriteable info"
+    puts "#{@rewriteables.length} is the number of rewriteables in the queue"
   end
 
 end 

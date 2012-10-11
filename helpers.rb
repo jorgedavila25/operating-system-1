@@ -10,6 +10,11 @@ module Helpers
     end      
   end
 
+  def check_if_its_upper(candidate)
+    return true if /[[:upper:]]/.match(candidate)
+    false
+  end
+
   def check_if_proper_input(arg)
     return true if /^[AtS]{1}$|^[pdcPDC]\d+$/.match(arg)
     puts "Please enter a proper input"
