@@ -11,6 +11,10 @@ class Cpu
     @queue << pcb
   end
 
+  def dequeue_pcb
+    @queue.pop 
+  end
+
   def get_cpu_length
     @queue.length
   end

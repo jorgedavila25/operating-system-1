@@ -12,6 +12,15 @@ class ReadyQueue
     @queue << arg
   end
 
+  def iterate
+    puts @queue.length
+    @queue.length.times do
+      temp = @queue.pop
+      puts temp.class
+      @queue << temp
+    end
+  end
+
   def dequeue_pcb
     @queue.pop
   end

@@ -4,36 +4,36 @@ class Device
   attr_accessor :queue
   
   def initialize
-    @number_of_pcb = Queue.new
-    puts "hi, I'm a #{base}"
+    @queue = Queue.new
   end
-  
-  def base
-    "base class"
-  end
-
 end
 
 class Printer < Device
-
-  def base
-    "printer"
+  def enqueue_to_printer(pcb)
+    @queue << pcb
   end
 
+  def number_of_pcb_in_printer
+    @queue.length
+  end
 end
 
 class Disk < Device
-  
-  def base
-    "Disk"
+  def enqueue_to_disk(pcb)
+    @queue << pcb
   end
 
+  def number_of_pcb_in_disk
+    @queue.length
+  end
 end 
 
 class Rewriteable < Device
-  
-  def base
-    "Rewriteable"
+  def enqueue_to_rewriteable(pcb)
+    @queue << pcb
   end
 
+  def number_of_pcb_in_rewriteable
+    @queue.length
+  end
 end 

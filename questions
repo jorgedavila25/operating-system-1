@@ -1,0 +1,2 @@
+if the cpu is empty, always put the next pcb from the ready queue in it (provided that the ready queue isnt empty)?
+
