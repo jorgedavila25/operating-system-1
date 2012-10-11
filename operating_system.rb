@@ -4,9 +4,6 @@ require './pcb'
 require './ready_queue'
 require './cpu'
 
-=begin
-  this is where all the logic will go
-=end 
 class Os
   include Helpers
 
@@ -41,30 +38,57 @@ class Os
       while (check_if_proper_input(@command) == false)
         @command = gets.chomp
       end
-      if @command == 'A'
-        arrival_of_process
-      elsif @command == 'S'
-        snapshot_mode
-      elsif @command == 't'
-        terminate_process
-      else
-        "This command is only available in snapshot mode, please try again"
-      end
+
+      arrival_of_process if @command == 'A'
+      snapshot_mode if @command == 'S'
+      terminate_process if @command == 't'
+      #TODO: Handle the p1 and P1 and the like 
     end
   end
 
   def snapshot_mode
-    puts "snapshot "
+    puts "Snapshot Mode"
+    puts "These are the options you have: r,p,d and c"
+    @snapshot_mode_command = gets.chomp
+    while (check_if_proper_input_for_snapshot_mode(@snapshot_mode_command) == false)
+      @snapshot_mode_command = gets.chomp
+    end
+
+    show_pids_processes_in_ready_queue if @snapshot_mode_command == 'r'
+    show_pids_and_printer_device_queue_info if @snapshot_mode_command == 'p'
+    show_pids_and_disk_device_queue_info if @snapshot_mode_command == 'd'
+    show_pids_and_rewriteable_device_queue_info if @snapshot_mode_command == 'c'
+
   end
 
   def arrival_of_process
     new_pcb = Pcb.new
     @os_ready_queue.enqueue_pcb(new_pcb)
-    @os_cpu.insert_to_cpu(@os_ready_queue.pop) if @os_cpu.get_ready_cpu_length == 0
+    puts "the number of pcb's in the Ready Queue #{@os_ready_queue.get_ready_queue_length}"
+    @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_cpu.get_cpu_length == 0
+    puts "the number of pcb's in the CPU: #{@os_cpu.get_cpu_length}"
   end
 
   def terminate_process
+    puts "terminate process"
+  end
 
+  private
+
+  def show_pids_processes_in_ready_queue
+    puts "Should show pids in the ready queue"
+  end
+
+  def show_pids_and_printer_device_queue_info
+    puts "show printer info"
+  end
+
+  def show_pids_and_disk_device_queue_info
+    puts "show disk info"
+  end  
+
+  def show_pids_and_rewriteable_device_queue_info
+    puts "show rewriteable info"
   end
 
 end 

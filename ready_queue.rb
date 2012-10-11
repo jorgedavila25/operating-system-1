@@ -9,11 +9,15 @@ class ReadyQueue
 
   def enqueue_pcb(arg)
     puts "made it in  ready queue"
-    @queue.push(arg)
+    @queue << arg
+  end
+
+  def dequeue_pcb
+    @queue.pop
   end
 
   def get_ready_queue_length
-    puts "number of pcb's in queue #{@queue.length}"
+    @queue.length
   end
 
 end

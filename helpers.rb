@@ -11,9 +11,15 @@ module Helpers
   end
 
   def check_if_proper_input(arg)
-     return true if /^[AtSrpdc]{1}$|^[pdcPDC]\d+$/.match(arg)
-     puts "Please enter a proper input"
-     return false
+    return true if /^[AtS]{1}$|^[pdcPDC]\d+$/.match(arg)
+    puts "Please enter a proper input"
+    return false
+  end
+  
+  def check_if_proper_input_for_snapshot_mode(arg)
+    return true if /^[rpdc]{1}$/.match(arg) 
+    puts "Please enter a proper command for snapshot mode"
+    return false
   end
 
 end 

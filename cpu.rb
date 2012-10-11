@@ -8,10 +8,10 @@ class Cpu
   end
 
   def insert_to_cpu(pcb)
-    @queue.push(pcb)
+    @queue << pcb
   end
 
-  def get_ready_cpu_length
+  def get_cpu_length
     @queue.length
   end
 
