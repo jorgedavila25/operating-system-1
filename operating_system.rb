@@ -14,35 +14,38 @@ class Os
     @os_cpu = Cpu.new
 
     puts "Welcome to your OS"
+    
     puts "How many printers do you want to insert?"
     @num_printers = gets.chomp
-    while (check_if_integer(@num_printers) == false)
-      @num_printers = gets.chomp
-    end
+    @num_printers = gets.chomp while (check_if_integer(@num_printers) == false)
+
     puts "How many disks do you want to insert?"
     @num_disks = gets.chomp
-    while (check_if_integer(@num_disks) == false)
-      @num_disks = gets.chomp
-    end
+    @num_disks = gets.chomp while (check_if_integer(@num_disks) == false)
+    
     puts "How many rewriteables do you want to insert?"
     @num_rewriteables = gets.chomp
-    while (check_if_integer(@num_rewriteables) == false)
-      @num_rewriteables = gets.chomp
-    end
+    @num_rewriteables = gets.chomp while (check_if_integer(@num_rewriteables) == false)
+
+    #TODO: Do something if this is true 
+    puts "you created no devices" if (check_if_all_are_zeros(@num_printers.to_i, @num_rewriteables.to_i, @num_disks.to_i) == 0)
+
+    generate_printers(@num_printers.to_i)
+    generate_disks(@num_disks.to_i)
+    generate_rewriteables(@num_rewriteables.to_i)
+
   end
 
   def initiate_commands
     while true
       puts "Enter a command in what you want to do:  "
       @command = gets.chomp
-      while (check_if_proper_input(@command) == false)
-        @command = gets.chomp
-      end
-
+      @command = gets.chomp while (check_if_proper_input(@command) == false)
       arrival_of_process if @command == 'A'
       snapshot_mode if @command == 'S'
       terminate_process if @command == 't'
       #TODO: Handle the p1 and P1 and the like 
+
     end
   end
 
@@ -50,10 +53,7 @@ class Os
     puts "Snapshot Mode"
     puts "These are the options you have: r,p,d and c"
     @snapshot_mode_command = gets.chomp
-    while (check_if_proper_input_for_snapshot_mode(@snapshot_mode_command) == false)
-      @snapshot_mode_command = gets.chomp
-    end
-
+    @snapshot_mode_command = gets.chomp while (check_if_proper_input_for_snapshot_mode(@snapshot_mode_command) == false)
     show_pids_processes_in_ready_queue if @snapshot_mode_command == 'r'
     show_pids_and_printer_device_queue_info if @snapshot_mode_command == 'p'
     show_pids_and_disk_device_queue_info if @snapshot_mode_command == 'd'
@@ -74,6 +74,28 @@ class Os
   end
 
   private
+
+  def generate_printers(num)
+    @printers = Queue.new
+    num.times{ @printers << Printer.new }
+    puts "#{@printers.length} is the number of printers in the  queue"
+  end
+
+  def generate_disks(num)
+    @disks = Queue.new
+    num.times{ @disks << Disk.new } 
+    puts "#{@disks.length} is the number of disks in the  queue"
+  end
+
+  def generate_rewriteables(num)
+    @rewriteables = Queue.new
+    num.times{ @rewriteables << Rewriteable.new }
+    puts "#{@rewriteables.length} is the number of rewriteables in the queue"
+  end
+
+  def generate_rewriteables(num)
+    puts "#{num} of rewriteable generated"
+  end
 
   def show_pids_processes_in_ready_queue
     puts "Should show pids in the ready queue"

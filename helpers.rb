@@ -22,4 +22,8 @@ module Helpers
     return false
   end
 
+  def check_if_all_are_zeros(*args)
+    args.inject{|sum,x| sum + x }
+  end
+
 end 

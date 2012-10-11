@@ -13,9 +13,7 @@ class Pcb
     @file_name = gets.chomp
     puts "What memory location?"
     @location_memory = gets.chomp
-    while (check_if_integer(@location_memory) == false)
-      @location_memory = gets.chomp
-    end
+    @location_memory = gets.chomp while (check_if_integer(@location_memory) == false)
     puts "Is it a read or write?"
     @read_or_write = gets.chomp
   end
