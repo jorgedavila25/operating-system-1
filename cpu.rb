@@ -11,8 +11,8 @@ class Cpu
     @queue.push(pcb)
   end
 
-  def length_of_cpu
-    puts @queue.length
+  def get_ready_cpu_length
+    @queue.length
   end
 
 end

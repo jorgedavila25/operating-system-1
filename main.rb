@@ -3,7 +3,7 @@ require './pcb'
 require './operating_system'
 require './ready_queue'
 require './device'
-require 'thread' # for queues 
+require 'thread'
 
 =begin
 	Program needs to have two stages of operation:  1. "Sys Gen" Section (this is the user operating the program)
@@ -36,14 +36,7 @@ require 'thread' # for queues
 
 =end
 
+new_os = Os.new
 
-puts "OS Assignment 1 - Jorge Davila"
-
-a = Printerpcb.new
-
-a.passed_to_device_queue
-
-b = Rewriteablepcb.new
-b.passed_to_device_queue
-
+new_os.initiate_commands
 
