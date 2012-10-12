@@ -18,38 +18,37 @@ class Device
   def number_of_pcb_in_device
     @queue.length
   end
+
+  def view_device
+    @queue.length.times do
+      temp = @queue.pop
+      puts "PCB with p_id: #{temp.p_id} is in the #{device}"
+      puts "File: #{temp.file_name}"
+      puts "Location Memory: #{temp.location_memory}"
+      puts "Read Or Write: #{temp.read_or_write}"
+      @queue << temp
+    end
+  end
+
+  def device
+    "device"
+  end
 end
 
 class Printer < Device
-  def enqueue_to_printer(pcb)
-    @queue << pcb
-  end
-
-  def dequeue_printer
-
-  end
-
-  def number_of_pcb_in_printer
-    @queue.length
+  def device
+    "printer"
   end
 end
 
 class Disk < Device
-  def enqueue_to_disk(pcb)
-    @queue << pcb
-  end
-
-  def number_of_pcb_in_disk
-    @queue.length
+  def device
+    "disk"
   end
 end 
 
 class Rewriteable < Device
-  def enqueue_to_rewriteable(pcb)
-    @queue << pcb
-  end
-
-  def number_of_pcb_in_rewriteable
-    @queue.length
+  def device
+    "rewriteable"
   end
 end 

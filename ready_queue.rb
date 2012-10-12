@@ -12,11 +12,10 @@ class ReadyQueue
     @queue << arg
   end
 
-  def iterate
-    puts @queue.length
+  def view_ready_queue
     @queue.length.times do
       temp = @queue.pop
-      puts temp.class
+      puts "PCB with p_id: #{temp.p_id} is in the ReadyQueue"
       @queue << temp
     end
   end
@@ -28,5 +27,4 @@ class ReadyQueue
   def get_ready_queue_length
     @queue.length
   end
-
 end

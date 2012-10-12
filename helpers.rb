@@ -27,8 +27,13 @@ module Helpers
     return false
   end
 
+  def check_if_read_or_write (candidate)
+    return true if candidate == "true" || candidate == "false"
+    puts "Please enter true or false"
+    return false
+  end
+
   def check_if_all_are_zeros(*args)
     args.inject{|sum,x| sum + x }
   end
-
 end 

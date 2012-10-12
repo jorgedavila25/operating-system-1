@@ -15,8 +15,15 @@ class Cpu
     @queue.pop 
   end
 
+  def view_cpu
+    @queue.length.times do
+      temp = @queue.pop
+      puts "PCB with p_id: #{temp.p_id} is in the CPU"
+      @queue << temp
+    end
+  end
+
   def get_cpu_length
     @queue.length
   end
-
 end

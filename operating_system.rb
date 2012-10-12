@@ -12,7 +12,7 @@ class Os
   def initialize
     @os_ready_queue = ReadyQueue.new
     @os_cpu = Cpu.new
-    @p_id = 0
+    @p_id = -1
 
     puts "Welcome to your OS"
     
@@ -34,7 +34,6 @@ class Os
     generate_printers(@num_printers.to_i)
     generate_disks(@num_disks.to_i)
     generate_rewriteables(@num_rewriteables.to_i)
-
   end
 
   def initiate_commands
@@ -109,8 +108,8 @@ class Os
       @new_printer_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
       @new_printer_pcb.passed_to_device_queue_is_printer
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
-      @printers[num-1].enqueue_to_printer(@new_printer_pcb)
-      puts "Number of pcb's in printer #{num} queue is: #{@printers[num-1].number_of_pcb_in_printer}"
+      @printers[num-1].enqueue_device(@new_printer_pcb)
+      puts "Number of pcb's in printer #{num} queue is: #{@printers[num-1].number_of_pcb_in_device}"
     elsif device != 'd' and device != 'c' #could prob handle this better
       puts "You did not create that many printers"
     else
@@ -120,8 +119,8 @@ class Os
       @new_disk_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
       @new_disk_pcb.passed_to_device_queue
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
-      @disks[num-1].enqueue_to_disk(@new_disk_pcb)
-      puts "Number of pcb's in disks #{num} queue is: #{@disks[num-1].number_of_pcb_in_disk}"
+      @disks[num-1].enqueue_device(@new_disk_pcb)
+      puts "Number of pcb's in disks #{num} queue is: #{@disks[num-1].number_of_pcb_in_device}"
     elsif device != 'p' and device != 'c' #could prob handle this better
       puts "You did not create that many disks"
     else
@@ -131,8 +130,8 @@ class Os
       @new_rewriteable_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
       @new_rewriteable_pcb.passed_to_device_queue
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
-      @rewriteables[num-1].enqueue_to_rewriteable(@new_rewriteable_pcb)
-      puts "Number of pcb's in rewriteables #{num} queue is: #{@rewriteables[num-1].number_of_pcb_in_rewriteable}"
+      @rewriteables[num-1].enqueue_device(@new_rewriteable_pcb)
+      puts "Number of pcb's in rewriteables #{num} queue is: #{@rewriteables[num-1].number_of_pcb_in_device}"
     elsif device != 'p' and device != 'd' #could prob handle this better
       puts "You did not create that many rewriteables"
     else
@@ -141,33 +140,47 @@ class Os
 
   def signal_completion(device, num)
     if device == 'P'
-      return puts "there are no pcb's on printer's #{num} queue" if @printers[num-1].number_of_pcb_in_printer == 0 
-      @printer_pcb_completed = @printers[num-1].
+      return puts "there are no pcb's on printer's #{num} queue" if @printers[num-1].number_of_pcb_in_device == 0 
+      @printer_pcb_completed = @printers[num-1].dequeue_device
+      @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@printer_pcb_completed) : @os_ready_queue.enqueue_pcb(@printer_pcb_completed)
+      puts "You've moved printer #{num} PCB with p_id: #{@printer_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)" 
     end
 
     if device == 'D'
-      return puts "there are no pcb's on disk's #{num} queue" if @disks[num-1].number_of_pcb_in_disk == 0 
+      return puts "there are no pcb's on disk's #{num} queue" if @disks[num-1].number_of_pcb_in_device == 0 
+      @disk_pcb_completed = @disks[num-1].dequeue_device
+      @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@disk_pcb_completed) : @os_ready_queue.enqueue_pcb(@disk_pcb_completed)
+      puts "You've moved disk #{num} PCB with p_id: #{@disk_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)"
     end
     
     if device == 'C'
-      return puts "there are no pcb's on rewriteable's #{num} queue" if @rewriteables[num-1].number_of_pcb_in_rewriteable == 0 
+      return puts "there are no pcb's on rewriteable's #{num} queue" if @rewriteables[num-1].number_of_pcb_in_device == 0 
+      @rewriteable_pcb_completed = @rewriteables[num-1].dequeue_device
+      @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@rewriteable_pcb_completed) : @os_ready_queue.enqueue_pcb(@rewriteable_pcb_completed)
+      puts "You've moved rewriteable #{num} PCB with p_id: #{@rewriteable_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)"
     end
   end
   
   def show_pids_processes_in_ready_queue
-    @os_ready_queue.iterate
+    @os_cpu.view_cpu
+    @os_ready_queue.view_ready_queue
   end
 
   def show_pids_and_printer_device_queue_info
-    puts "#{@printers.length} is the number of printers in the  queue"
+    @printers.each do |printer|
+      printer.view_device
+    end
   end
 
   def show_pids_and_disk_device_queue_info
-    puts "#{@disks.length} is the number of disks in the  queue"
+    @disks.each do |disk|
+      disk.view_device
+    end
   end  
 
   def show_pids_and_rewriteable_device_queue_info
-    puts "#{@rewriteables.length} is the number of rewriteables in the queue"
-  end
+    @rewriteables.each do |rewriteable|
+      rewriteable.view_device
+    end
 end 
 
