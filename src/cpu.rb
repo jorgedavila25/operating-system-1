@@ -16,6 +16,7 @@ class Cpu
   end
 
   def view_cpu
+    return puts "cpu is empty" if @queue.empty?
     @queue.length.times do
       temp = @queue.pop
       puts "PCB with p_id: #{temp.p_id} is in the CPU"

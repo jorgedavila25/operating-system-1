@@ -12,6 +12,7 @@ class ReadyQueue
   end
 
   def view_ready_queue
+    return puts "Ready Queue is empty" if @queue.empty?
     @queue.length.times do
       temp = @queue.pop
       puts "PCB with p_id: #{temp.p_id} is in the ReadyQueue"
