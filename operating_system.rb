@@ -28,8 +28,8 @@ class Os
     @num_rewriteables = gets.chomp
     @num_rewriteables = gets.chomp while (check_if_integer(@num_rewriteables) == false)
 
-    #TODO: Do something if this is true 
     abort("you created no devices, please start the program again") if (check_if_all_are_zeros(@num_printers.to_i, @num_rewriteables.to_i, @num_disks.to_i) == 0)
+    abort("you created negative devices, please start the program again") if (@num_printers.to_i < 0 || @num_disks.to_i < 0 || @num_rewriteables.to_i < 0)
 
     generate_printers(@num_printers.to_i)
     generate_disks(@num_disks.to_i)
@@ -140,6 +140,7 @@ class Os
 
   def signal_completion(device, num)
     if device == 'P'
+      return puts "This printer does not exist" if @printers.size < num-1
       return puts "there are no pcb's on printer's #{num} queue" if @printers[num-1].number_of_pcb_in_device == 0 
       @printer_pcb_completed = @printers[num-1].dequeue_device
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@printer_pcb_completed) : @os_ready_queue.enqueue_pcb(@printer_pcb_completed)
@@ -147,6 +148,7 @@ class Os
     end
 
     if device == 'D'
+      return puts "This printer does not exist" if @disks.size < num-1
       return puts "there are no pcb's on disk's #{num} queue" if @disks[num-1].number_of_pcb_in_device == 0 
       @disk_pcb_completed = @disks[num-1].dequeue_device
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@disk_pcb_completed) : @os_ready_queue.enqueue_pcb(@disk_pcb_completed)
@@ -154,6 +156,7 @@ class Os
     end
     
     if device == 'C'
+      return puts "This printer does not exist" if @rewriteables.size < num-1
       return puts "there are no pcb's on rewriteable's #{num} queue" if @rewriteables[num-1].number_of_pcb_in_device == 0 
       @rewriteable_pcb_completed = @rewriteables[num-1].dequeue_device
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@rewriteable_pcb_completed) : @os_ready_queue.enqueue_pcb(@rewriteable_pcb_completed)
