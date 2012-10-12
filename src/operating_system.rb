@@ -7,8 +7,6 @@ require './cpu'
 class Os
   include Helpers
 
-  attr_accessor :num_printers, :num_disks, :num_rewriteables, :command 
-
   def initialize
     @os_ready_queue = ReadyQueue.new
     @os_cpu = Cpu.new

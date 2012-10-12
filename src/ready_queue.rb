@@ -1,7 +1,6 @@
 require 'thread'
 
 class ReadyQueue
-  attr_accessor :queue
 
   def initialize
     @queue = Queue.new
