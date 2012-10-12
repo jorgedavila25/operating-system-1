@@ -16,7 +16,7 @@ class Pcb
     puts "What memory location?"
     @location_memory = gets.chomp
     @location_memory = gets.chomp while (check_if_integer(@location_memory) == false)
-    @read_or_write = "write"
+    @read_or_write = "w"
   end
 
   def passed_to_device_queue
@@ -25,7 +25,7 @@ class Pcb
     puts "What memory location?"
     @location_memory = gets.chomp
     @location_memory = gets.chomp while (check_if_integer(@location_memory) == false)
-    puts "Is it a read or write?"
+    puts "Is it a read or write (r/w)?"
     @read_or_write = gets.chomp
     @read_or_write = gets.chomp while (check_if_read_or_write(@read_or_write) == false)
   end

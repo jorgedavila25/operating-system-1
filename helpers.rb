@@ -28,8 +28,8 @@ module Helpers
   end
 
   def check_if_read_or_write(candidate)
-    return true if (candidate == "true" || candidate == "false")
-    puts "Please enter true or false"
+    return true if (candidate == "r" || candidate == "w")
+    puts "Please enter r or w"
     return false
   end
 
