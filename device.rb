@@ -25,7 +25,9 @@ class Device
       puts "PCB with p_id: #{temp.p_id} is in the #{device}"
       puts "File: #{temp.file_name}"
       puts "Location Memory: #{temp.location_memory}"
+      is_write = temp.read_or_write 
       puts "Read Or Write: #{temp.read_or_write}"
+      puts "Size of file: #{temp.size_of_file}" if is_write == 'w'
       @queue << temp
     end
   end
