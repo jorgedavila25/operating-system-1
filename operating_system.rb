@@ -140,7 +140,7 @@ class Os
 
   def signal_completion(device, num)
     if device == 'P'
-      return puts "This printer does not exist" if @printers.size < num-1
+      return puts "This printer does not exist" if @printers.size < num
       return puts "there are no pcb's on printer's #{num} queue" if @printers[num-1].number_of_pcb_in_device == 0 
       @printer_pcb_completed = @printers[num-1].dequeue_device
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@printer_pcb_completed) : @os_ready_queue.enqueue_pcb(@printer_pcb_completed)
@@ -148,7 +148,7 @@ class Os
     end
 
     if device == 'D'
-      return puts "This disk does not exist" if @disks.size < num-1
+      return puts "This disk does not exist" if @disks.size < num
       return puts "there are no pcb's on disk's #{num} queue" if @disks[num-1].number_of_pcb_in_device == 0 
       @disk_pcb_completed = @disks[num-1].dequeue_device
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@disk_pcb_completed) : @os_ready_queue.enqueue_pcb(@disk_pcb_completed)
@@ -156,7 +156,7 @@ class Os
     end
     
     if device == 'C'
-      return puts "This rewriteable does not exist" if @rewriteables.size < num-1
+      return puts "This rewriteable does not exist" if @rewriteables.size < num
       return puts "there are no pcb's on rewriteable's #{num} queue" if @rewriteables[num-1].number_of_pcb_in_device == 0 
       @rewriteable_pcb_completed = @rewriteables[num-1].dequeue_device
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@rewriteable_pcb_completed) : @os_ready_queue.enqueue_pcb(@rewriteable_pcb_completed)
