@@ -34,6 +34,12 @@ module Helpers
     return false
   end
 
+  def check_if_yes_or_no(candidate)
+    return true if (candidate == "yes" || candidate == "no")
+    puts "Please enter yes or not"
+    return false
+  end
+
   def check_if_all_are_zeros(*args)
     args.inject{|sum,x| sum + x }
   end

@@ -36,7 +36,7 @@ class Os
 
   def initiate_commands
     while true
-      puts "Enter a command in what you want to do (type 'quit' to shut down):  "
+      puts "Enter a command (type 'quit' to shut down):  "
       @command = gets.chomp
       @command = gets.chomp while (check_if_proper_input(@command) == false)
       arrival_of_process if @command == 'A'
@@ -62,8 +62,8 @@ class Os
     @p_id = @p_id + 1
     new_pcb = Pcb.new(@p_id)
     @os_ready_queue.enqueue_pcb(new_pcb)
-    puts "the number of pcb's in the Ready Queue #{@os_ready_queue.get_ready_queue_length}"
     @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_cpu.get_cpu_length == 0
+    puts "the number of pcb's in the Ready Queue #{@os_ready_queue.get_ready_queue_length}"
     puts "the number of pcb's in the CPU: #{@os_cpu.get_cpu_length}"
   end
 
@@ -169,15 +169,27 @@ class Os
   end
 
   def show_pids_and_printer_device_queue_info
-    @printers.each { |printer| printer.view_device }
+    i = 0
+    @printers.each do |printer|
+      i = i + 1 
+      printer.view_device(i) 
+    end
   end
 
   def show_pids_and_disk_device_queue_info
-    @disks.each { |disk| disk.view_device }
+    i = 0
+    @disks.each do |disk| 
+      i = i + 1
+      disk.view_device(i)
+    end
   end  
 
   def show_pids_and_rewriteable_device_queue_info
-    @rewriteables.each { |rewriteable| rewriteable.view_device }
+    i = 0 
+    @rewriteables.each do |rewriteable| 
+      i = i + 1
+      rewriteable.view_device(i)
+    end
   end
 end 
 

@@ -7,6 +7,7 @@ class Cpu
   end
 
   def insert_to_cpu(pcb)
+    puts "PCB made it to the CPU"
     @queue << pcb
   end
 

@@ -32,7 +32,7 @@ class Pcb
     @read_or_write = gets.chomp
     @read_or_write = gets.chomp while (check_if_read_or_write(@read_or_write) == false)
     if @read_or_write == 'w'
-      puts "Enter the size of this size of this file:"
+      puts "Enter the size of this file:"
       @size_of_file = gets.chomp
       @size_of_file = gets.chomp while (check_if_integer(@size_of_file) == false)
     end
