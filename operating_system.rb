@@ -3,7 +3,6 @@ require 'thread'
 require './pcb'
 require './ready_queue'
 require './cpu'
-require './pid'
 
 class Os
   include Helpers
@@ -72,8 +71,9 @@ class Os
 
   def terminate_process
     return puts "Nothing to terminate, CPU empty" if @os_cpu.get_cpu_length == 0
-    @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
-    @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.length > 0
+    @pcb_to_terminate = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
+    puts "You've successfully terminated pcb with p_id #{@pcb_to_terminate.p_id}"
+    @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
   end
 
   private
@@ -105,51 +105,53 @@ class Os
       return
     end
 
-    if device[0] == 'p' and num != 0 and num <= @printers.length
-      @new_printer_pcb = Printerpcb.new.passed_to_device_queue
-      @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
-      if @os_ready_queue.get_ready_queue_length > 0 # if readyqueue has pcb's, push one to the cpu
-        @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb)
-      end
+    if device == 'p' and num != 0 and num <= @printers.length
+      @new_printer_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
+      @new_printer_pcb.passed_to_device_queue_is_printer
+      @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
       @printers[num-1].enqueue_to_printer(@new_printer_pcb)
       puts "Number of pcb's in printer #{num} queue is: #{@printers[num-1].number_of_pcb_in_printer}"
-    elsif device[0] != 'd' and device[0] != 'c' #could prob handle this better
+    elsif device != 'd' and device != 'c' #could prob handle this better
       puts "You did not create that many printers"
     else
     end
 
-    if device[0] == 'd' and num != 0 and num <= @disks.length
-      @new_disk_pcb = Diskpcb.new.passed_to_device_queue
-      @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
-      if @os_ready_queue.get_ready_queue_length > 0 # if readyqueue has pcb's, push one to the cpu
-        @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb)
-      end
+    if device == 'd' and num != 0 and num <= @disks.length
+      @new_disk_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
+      @new_disk_pcb.passed_to_device_queue
+      @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
       @disks[num-1].enqueue_to_disk(@new_disk_pcb)
-      puts "made it after enqueue"
-      puts "Number of pcb's in disk #{num} queue is: #{@disks[num-1].number_of_pcb_in_disk}"
-    elsif device[0] != 'p' and device[0] != 'c' #could prob handle this better
+      puts "Number of pcb's in disks #{num} queue is: #{@disks[num-1].number_of_pcb_in_disk}"
+    elsif device != 'p' and device != 'c' #could prob handle this better
       puts "You did not create that many disks"
     else
     end
 
-    if device[0] == 'c' and num != 0 and num <= @rewriteables.length
-      @new_rewriteable_pcb = Rewriteablepcb.new.passed_to_device_queue
-      
-      @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
-      if @os_ready_queue.get_ready_queue_length > 0 # if readyqueue has pcb's, push one to the cpu
-        @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb)
-      end
-      @rewriteables[num-1].enqueue_to_rewriteable(@new_printer_pcb)
-      puts "Number of pcb's in rewriteable #{num} queue is: #{@rewriteables[num-1].number_of_pcb_in_rewriteable}"
-    elsif device[0] != 'p' and device[0] != 'd' #could prob handle this better
+    if device == 'c' and num != 0 and num <= @rewriteables.length
+      @new_rewriteable_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
+      @new_rewriteable_pcb.passed_to_device_queue
+      @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
+      @rewriteables[num-1].enqueue_to_rewriteable(@new_rewriteable_pcb)
+      puts "Number of pcb's in rewriteables #{num} queue is: #{@rewriteables[num-1].number_of_pcb_in_rewriteable}"
+    elsif device != 'p' and device != 'd' #could prob handle this better
       puts "You did not create that many rewriteables"
     else
     end
   end
 
   def signal_completion(device, num)
-    # take it from the Device's cue and put it on the system ready queue
+    if device == 'P'
+      return puts "there are no pcb's on printer's #{num} queue" if @printers[num-1].number_of_pcb_in_printer == 0 
+      @printer_pcb_completed = @printers[num-1].
+    end
 
+    if device == 'D'
+      return puts "there are no pcb's on disk's #{num} queue" if @disks[num-1].number_of_pcb_in_disk == 0 
+    end
+    
+    if device == 'C'
+      return puts "there are no pcb's on rewriteable's #{num} queue" if @rewriteables[num-1].number_of_pcb_in_rewriteable == 0 
+    end
   end
   
   def show_pids_processes_in_ready_queue

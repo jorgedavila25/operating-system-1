@@ -6,11 +6,27 @@ class Device
   def initialize
     @queue = Queue.new
   end
+
+  def enqueue_device(pcb)
+    @queue << pcb
+  end
+
+  def dequeue_device
+    @queue.pop
+  end
+
+  def number_of_pcb_in_device
+    @queue.length
+  end
 end
 
 class Printer < Device
   def enqueue_to_printer(pcb)
     @queue << pcb
+  end
+
+  def dequeue_printer
+
   end
 
   def number_of_pcb_in_printer
