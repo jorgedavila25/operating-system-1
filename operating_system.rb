@@ -38,13 +38,14 @@ class Os
 
   def initiate_commands
     while true
-      puts "Enter a command in what you want to do:  "
+      puts "Enter a command in what you want to do (type 'quit' to shut down):  "
       @command = gets.chomp
       @command = gets.chomp while (check_if_proper_input(@command) == false)
       arrival_of_process if @command == 'A'
       snapshot_mode if @command == 'S'
       terminate_process if @command == 't'
       handle_system_request(@command) if /[pcdPCD]/.match(@command[0])
+      abort("Shut Down.") if @command == "quit"
     end
   end
 
@@ -170,21 +171,15 @@ class Os
   end
 
   def show_pids_and_printer_device_queue_info
-    @printers.each do |printer|
-      printer.view_device
-    end
+    @printers.each { |printer| printer.view_device }
   end
 
   def show_pids_and_disk_device_queue_info
-    @disks.each do |disk|
-      disk.view_device
-    end
+    @disks.each { |disk| disk.view_device }
   end  
 
   def show_pids_and_rewriteable_device_queue_info
-    @rewriteables.each do |rewriteable|
-      rewriteable.view_device
-    end
+    @rewriteables.each { |rewriteable| rewriteable.view_device }
   end
 end 
 
