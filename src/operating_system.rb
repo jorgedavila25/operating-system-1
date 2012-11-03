@@ -178,26 +178,20 @@ class Os
   end
 
   def show_pids_and_printer_device_queue_info
-    i = 0
-    @printers.each do |printer|
-      i = i + 1 
-      printer.view_device(i) 
+    @printers.each_with_index do |printer, i|
+      printer.view_device(i+1) 
     end
   end
 
   def show_pids_and_disk_device_queue_info
-    i = 0
-    @disks.each do |disk| 
-      i = i + 1
-      disk.view_device(i)
+    @disks.each_with_index do |disk, i| 
+      disk.view_device(i+1)
     end
   end  
 
   def show_pids_and_rewriteable_device_queue_info
-    i = 0 
-    @rewriteables.each do |rewriteable| 
-      i = i + 1
-      rewriteable.view_device(i)
+    @rewriteables.each_with_index do |rewriteable, i| 
+      rewriteable.view_device(i+1)
     end
   end
 end 
