@@ -22,7 +22,6 @@ class Device
 
   def view_device(i)
     return puts "#{device}'s #{i} queue is empty" if @queue.empty?
-
     # TODO Make sure printing devices do not exceed 23 lines
     @queue.length.times do
       temp = @queue.pop
@@ -48,6 +47,15 @@ class Printer < Device
 end
 
 class Disk < Device
+  def initialize
+    super
+    @num_of_cylinders
+  end
+
+  def set_num_of_cylinders(num)
+    @num_of_cylinders = num
+  end
+
   def device
     "disk"
   end

@@ -17,21 +17,20 @@ class Os
     puts "How many printers do you want to insert?"
     @num_printers = gets.chomp
     @num_printers = gets.chomp while (check_if_integer(@num_printers) == false)
+    generate_printers(@num_printers.to_i)
 
     puts "How many disks do you want to insert?"
     @num_disks = gets.chomp
     @num_disks = gets.chomp while (check_if_integer(@num_disks) == false)
+    generate_disks(@num_disks.to_i)
     
     puts "How many rewriteables do you want to insert?"
     @num_rewriteables = gets.chomp
     @num_rewriteables = gets.chomp while (check_if_integer(@num_rewriteables) == false)
+    generate_rewriteables(@num_rewriteables.to_i)
 
     abort("you created no devices, please start the program again") if (check_if_all_are_zeros(@num_printers.to_i, @num_rewriteables.to_i, @num_disks.to_i) == 0)
     abort("you created negative devices, please start the program again") if (@num_printers.to_i < 0 || @num_disks.to_i < 0 || @num_rewriteables.to_i < 0)
-
-    generate_printers(@num_printers.to_i)
-    generate_disks(@num_disks.to_i)
-    generate_rewriteables(@num_rewriteables.to_i)
   end
 
   def initiate_commands
@@ -82,8 +81,18 @@ class Os
   end
 
   def generate_disks(num)
+    # TODO: find a better way to keep track of the # of iterations
+    i = 1 
     @disks = Array.new
-    num.times{ @disks << Disk.new } 
+    num.times do |disk|
+      disk = Disk.new
+      puts "Enter the number of cylinders disk #{i} has: "
+      num_of_cylinders = gets.chomp
+      num_of_cylinders = gets.chomp while (check_if_integer(num_of_cylinders) == false)
+      disk.set_num_of_cylinders(num_of_cylinders.to_i)
+      @disks << disk
+      i += 1
+    end
   end
 
   def generate_rewriteables(num)
