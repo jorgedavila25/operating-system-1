@@ -12,6 +12,7 @@ class Os
     @os_cpu = Cpu.new
     @p_id = -1
 
+
     puts "Welcome to your OS"
     
     puts "How many printers do you want to insert?"
@@ -28,6 +29,10 @@ class Os
     @num_rewriteables = gets.chomp
     @num_rewriteables = gets.chomp while (check_if_integer(@num_rewriteables) == false)
     generate_rewriteables(@num_rewriteables.to_i)
+
+    puts "What is the length of a time slice (in milliseconds)?"
+    @time_slice = gets.chomp
+    @time_slice = gets.chomp while (check_if_integer(@time_slice) == false)
 
     abort("you created no devices, please start the program again") if (check_if_all_are_zeros(@num_printers.to_i, @num_rewriteables.to_i, @num_disks.to_i) == 0)
     abort("you created negative devices, please start the program again") if (@num_printers.to_i < 0 || @num_disks.to_i < 0 || @num_rewriteables.to_i < 0)
