@@ -21,27 +21,10 @@ class Device
   end
 
   def view_device(i)
-    # Professor does not want this content to exceed 23 lines
-    # The max a device will print is 5 lines (if it's a write file)
-    # Therefore it should not print out more than 4 iterations
     return puts "#{device}'s #{i} queue is empty" if @queue.empty?
-    if @queue.length > 4
-      puts "To fully see all of the PCB's in the #{device}'s queue, it will exceed 23 lines" 
-      puts "Do you wish to see all (will exceeed 23 lines), or will you rather just see enough to fit 23 lines? (yes/no)"
-      @exceeed_or_not = gets.chomp
-      @exceeed_or_not = gets.chomp while (check_if_yes_or_no(@exceeed_or_not) == false)
-      if @exceeed_or_not == 'yes'
-        @times_to_iterate = @queue.length
-      else 
-        @times_to_iterate = 4
-      end
-    else
-      @times_to_iterate = @queue.length
-    end
 
-    
-
-    @times_to_iterate.times do
+    # TODO Make sure printing devices do not exceed 23 lines
+    @queue.length.times do
       temp = @queue.pop
       puts "PCB with p_id: #{temp.p_id} is in #{device} #{i}"
       puts "File: #{temp.file_name}"
