@@ -46,6 +46,7 @@ class Os
       arrival_of_process if @command == 'A'
       snapshot_mode if @command == 'S'
       terminate_process if @command == 't'
+      time_slice_ends if @command == 'T'
       handle_system_request(@command) if /[pcdPCD]/.match(@command[0])
       abort("Shut Down.") if @command == "quit"
     end
@@ -175,6 +176,9 @@ class Os
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@rewriteable_pcb_completed) : @os_ready_queue.enqueue_pcb(@rewriteable_pcb_completed)
       puts "You've moved rewriteable #{num} PCB with p_id: #{@rewriteable_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)"
     end
+  end
+  def time_slice_ends
+    return puts "Can't operate a time slice, CPU empty" if @os_cpu.get_cpu_length == 0
   end
   
   def show_pids_processes_in_ready_queue

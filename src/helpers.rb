@@ -27,7 +27,7 @@ module Helpers
 
   def check_if_proper_input(arg)
     return true if arg == "quit"
-    return true if /^[AtS]{1}$|^[pdcPDC]\d+$/.match(arg)
+    return true if /^[AtST]{1}$|^[pdcPDC]\d+$/.match(arg)
     puts "Please enter a proper input"
     return false
   end
