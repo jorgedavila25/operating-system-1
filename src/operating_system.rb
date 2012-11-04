@@ -130,7 +130,7 @@ class Os
 
     if device == 'd' and num != 0 and num <= @disks.length
       @new_disk_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
-      @new_disk_pcb.passed_to_device_queue
+      @new_disk_pcb.passed_to_device_queue_is_disk(@disks[num-1].num_of_cylinders)
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
       @disks[num-1].enqueue_device(@new_disk_pcb)
       puts "Number of pcb's in disks #{num} queue is: #{@disks[num-1].number_of_pcb_in_device}"

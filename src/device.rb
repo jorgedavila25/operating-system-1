@@ -47,6 +47,7 @@ class Printer < Device
 end
 
 class Disk < Device
+  attr_accessor :num_of_cylinders
   def initialize
     super
     @num_of_cylinders

@@ -2,7 +2,7 @@ require './helpers'
 
 class Pcb
   include Helpers
-  attr_accessor :file_name, :location_memory, :read_or_write, :p_id, :size_of_file
+  attr_accessor :file_name, :location_memory, :read_or_write, :p_id, :size_of_file, :cylinder_num
 
   def initialize(pid)
     puts "created a PCB"
@@ -20,6 +20,25 @@ class Pcb
     puts "Enter the size of this size of this file that will go to the printer"
     @size_of_file = gets.chomp
     @size_of_file = gets.chomp while (check_if_integer(@size_of_file) == false)
+  end
+
+  def passed_to_device_queue_is_disk(num_of_cylinders)
+    puts "What is the file name?"
+    @file_name = gets.chomp
+    puts "What memory location?"
+    @location_memory = gets.chomp
+    @location_memory = gets.chomp while (check_if_integer(@location_memory) == false)
+    puts "What's the cylinder location?"
+    @cylinder_num = gets.chomp
+    @cylinder_num = gets.chomp while (check_if_in_cylinder_bounds(@cylinder_num, num_of_cylinders) == false)
+    puts "Is it a read or write (r/w)?"
+    @read_or_write = gets.chomp
+    @read_or_write = gets.chomp while (check_if_read_or_write(@read_or_write) == false)
+    if @read_or_write == 'w'
+      puts "Enter the size of this file:"
+      @size_of_file = gets.chomp
+      @size_of_file = gets.chomp while (check_if_integer(@size_of_file) == false)
+    end    
   end
 
   def passed_to_device_queue

@@ -10,6 +10,16 @@ module Helpers
     end      
   end
 
+  def check_if_in_cylinder_bounds(candidate, bounds)
+    return false if check_if_integer(candidate) == false
+    if 0 <= candidate.to_i && candidate.to_i <= bounds-1
+      return true
+    else
+      puts "The number you entered is not in bounds. Please enter a number in between 0 and #{bounds-1}"
+      return false
+    end
+  end
+
   def check_if_its_upper(candidate)
     return true if /[[:upper:]]/.match(candidate)
     false
