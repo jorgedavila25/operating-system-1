@@ -74,8 +74,12 @@ class Os
 
   def terminate_process
     return puts "Nothing to terminate, CPU empty" if @os_cpu.get_cpu_length == 0
-    @pcb_to_terminate = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
-    puts "You've successfully terminated pcb with p_id #{@pcb_to_terminate.p_id}"
+    pcb_to_terminate = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
+    puts "How long was this PCB in the CPU just now?"
+    time_spent = gets.chomp
+    pcb_to_terminate.time_spent_in_cpu += time_spent.to_i
+    puts "You've successfully terminated pcb with p_id #{pcb_to_terminate.p_id}"
+    puts "The total time CPU time is #{pcb_to_terminate.time_spent_in_cpu}"
     @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
   end
 
@@ -119,10 +123,13 @@ class Os
     end
 
     if device == 'p' and num != 0 and num <= @printers.length
-      @new_printer_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
-      @new_printer_pcb.passed_to_device_queue_is_printer
+      new_printer_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
+      puts "How long was this PCB in the CPU?"
+      time_spent = gets.chomp
+      new_printer_pcb.time_spent_in_cpu += time_spent.to_i
+      new_printer_pcb.passed_to_device_queue_is_printer
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
-      @printers[num-1].enqueue_device(@new_printer_pcb)
+      @printers[num-1].enqueue_device(new_printer_pcb)
       puts "Number of pcb's in printer #{num} queue is: #{@printers[num-1].number_of_pcb_in_device}"
     elsif device != 'd' and device != 'c' #could prob handle this better
       puts "You did not create that many printers"
@@ -130,10 +137,13 @@ class Os
     end
 
     if device == 'd' and num != 0 and num <= @disks.length
-      @new_disk_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
-      @new_disk_pcb.passed_to_device_queue_is_disk(@disks[num-1].num_of_cylinders)
+      new_disk_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
+      puts "How long was this PCB in the CPU?"
+      time_spent = gets.chomp
+      new_disk_pcb.time_spent_in_cpu += time_spent.to_i
+      new_disk_pcb.passed_to_device_queue_is_disk(@disks[num-1].num_of_cylinders)
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
-      @disks[num-1].enqueue_device(@new_disk_pcb)
+      @disks[num-1].enqueue_device(new_disk_pcb)
       puts "Number of pcb's in disks #{num} queue is: #{@disks[num-1].number_of_pcb_in_device}"
     elsif device != 'p' and device != 'c' #could prob handle this better
       puts "You did not create that many disks"
@@ -141,10 +151,13 @@ class Os
     end
 
     if device == 'c' and num != 0 and num <= @rewriteables.length
-      @new_rewriteable_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
-      @new_rewriteable_pcb.passed_to_device_queue
+      new_rewriteable_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
+      puts "How long was this PCB in the CPU?"
+      time_spent = gets.chomp
+      new_rewriteable_pcb.time_spent_in_cpu += time_spent.to_i
+      new_rewriteable_pcb.passed_to_device_queue
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
-      @rewriteables[num-1].enqueue_device(@new_rewriteable_pcb)
+      @rewriteables[num-1].enqueue_device(new_rewriteable_pcb)
       puts "Number of pcb's in rewriteables #{num} queue is: #{@rewriteables[num-1].number_of_pcb_in_device}"
     elsif device != 'p' and device != 'd' #could prob handle this better
       puts "You did not create that many rewriteables"
@@ -179,6 +192,10 @@ class Os
   end
   def time_slice_ends
     return puts "Can't operate a time slice, CPU empty" if @os_cpu.get_cpu_length == 0
+    pcb = @os_cpu.dequeue_pcb
+    pcb.time_spent_in_cpu += @time_slice.to_i # update the time slice
+    @os_ready_queue.enqueue_pcb(pcb)
+    @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_cpu.get_cpu_length == 0
   end
   
   def show_pids_processes_in_ready_queue

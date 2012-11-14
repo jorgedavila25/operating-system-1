@@ -31,6 +31,7 @@ class Device
       is_write = temp.read_or_write 
       puts "Read Or Write: #{temp.read_or_write}"
       puts "Size of file: #{temp.size_of_file}" if is_write == 'w'
+      puts "The time spent on CPU is: #{temp.time_spent_in_cpu}"
       @queue << temp
     end
   end

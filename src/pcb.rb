@@ -2,9 +2,10 @@ require './helpers'
 
 class Pcb
   include Helpers
-  attr_accessor :file_name, :location_memory, :read_or_write, :p_id, :size_of_file, :cylinder_num
+  attr_accessor :file_name, :location_memory, :read_or_write, :p_id, :size_of_file, :cylinder_num, :time_spent_in_cpu
 
   def initialize(pid)
+    @time_spent_in_cpu = 0
     puts "created a PCB"
     @p_id = pid
     puts "p id number is #{@p_id}"
