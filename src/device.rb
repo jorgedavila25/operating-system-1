@@ -12,6 +12,10 @@ class Device
     @queue << pcb
   end
 
+  def c_look_algorithm
+
+  end
+
   def dequeue_device
     @queue.pop
   end
@@ -29,6 +33,7 @@ class Device
       puts "PCB with p_id: #{temp.p_id} is in #{device} #{i}"
       puts "File: #{temp.file_name}"
       puts "Location Memory: #{temp.location_memory}"
+      puts "Cylinder Location: #{temp.cylinder_num}" if "#{device}" == "disk"
       is_write = temp.read_or_write 
       puts "Read Or Write: #{temp.read_or_write}"
       puts "Size of file: #{temp.size_of_file}" if is_write == 'w'
@@ -53,7 +58,7 @@ class Disk < Device
   attr_accessor :num_of_cylinders
   def initialize
     super
-    @num_of_cylinders
+    @num_of_cylinders = 0
   end
 
   def set_num_of_cylinders(num)
