@@ -12,10 +12,6 @@ class Device
     @queue << pcb
   end
 
-  def c_look_algorithm
-
-  end
-
   def dequeue_device
     @queue.pop
   end
@@ -56,13 +52,48 @@ end
 
 class Disk < Device
   attr_accessor :num_of_cylinders
+
   def initialize
-    super
+    @processes_in_queue = Array.new
     @num_of_cylinders = 0
+  end
+
+  def enqueue_device(pcb)
+    @processes_in_queue << pcb
+  end
+
+  def dequeue_device
+    c_look_alogrithm
+  end
+
+  def c_look_alogrithm
+    # Implement algorithm here
+    @processes_in_queue.shift
+    # return the pcb after algorithm finishes
   end
 
   def set_num_of_cylinders(num)
     @num_of_cylinders = num
+  end
+
+  def number_of_pcb_in_device
+    @processes_in_queue.length
+  end
+
+  def view_device(i)
+    return puts "#{device}'s #{i} queue is empty" if @processes_in_queue.empty?
+    # TODO Make sure printing devices do not exceed 23 lines
+    @processes_in_queue.each do |temp|
+      puts "PCB with p_id: #{temp.p_id} is in #{device} #{i}"
+      puts "File: #{temp.file_name}"
+      puts "Location Memory: #{temp.location_memory}"
+      puts "Cylinder Location: #{temp.cylinder_num}" if "#{device}" == "disk"
+      is_write = temp.read_or_write 
+      puts "Read Or Write: #{temp.read_or_write}"
+      puts "Size of file: #{temp.size_of_file}" if is_write == 'w'
+      puts "The time spent on CPU is: #{temp.time_spent_in_cpu}"
+      puts "The average burst time is #{temp.compute_average_burst_time}"
+    end
   end
 
   def device
