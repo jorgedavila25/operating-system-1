@@ -32,6 +32,7 @@ class Device
       puts "Read Or Write: #{temp.read_or_write}"
       puts "Size of file: #{temp.size_of_file}" if is_write == 'w'
       puts "The time spent on CPU is: #{temp.time_spent_in_cpu}"
+      puts "The average burst time is #{temp.compute_average_burst_time}" 
       @queue << temp
     end
   end
