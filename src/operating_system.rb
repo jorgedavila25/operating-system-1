@@ -42,7 +42,7 @@ class Os
 
   def initiate_commands
     while true
-      puts "Enter a command (type 'quit' to shut down):  "
+      puts "Enter a command ('A' => PCB, 'S' => Snapshot, 't' => Terminate, 'T' => Time Slice, 'quit' => shut down):  "
       @command = gets.chomp
       @command = gets.chomp while (check_if_proper_input(@command) == false)
       arrival_of_process if @command == 'A'
