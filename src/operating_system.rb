@@ -80,7 +80,8 @@ class Os
     puts "How long was this PCB in the CPU just now?"
     time_spent = gets.chomp
     pcb_to_terminate.time_spent_in_cpu += time_spent.to_i
-    @total_time_processes_spent_on_cpu += pcb_to_terminate.time_spent_in_cpu
+    @total_time_processes_spent_on_cpu += pcb_to_terminate.time_spent_in_cpu # update the total global cpu time
+    @total_number_of_bursts += 1 # update the total global burst occurences
     puts "You've successfully terminated pcb with p_id #{pcb_to_terminate.p_id}"
     puts "The total time CPU time is #{pcb_to_terminate.time_spent_in_cpu}"
     @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
@@ -217,28 +218,40 @@ class Os
   def show_pids_processes_in_ready_queue
     @os_cpu.view_cpu
     @os_ready_queue.view_ready_queue
-    puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}" if @total_number_of_bursts != 0
+    if @total_number_of_bursts != 0
+      puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
+      puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
+    end
   end
 
   def show_pids_and_printer_device_queue_info
     @printers.each_with_index do |printer, i|
       printer.view_device(i+1) 
     end
-    puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}" if @total_number_of_bursts != 0
+    if @total_number_of_bursts != 0
+      puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
+      puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
+    end
   end
 
   def show_pids_and_disk_device_queue_info
     @disks.each_with_index do |disk, i| 
       disk.view_device(i+1)
     end
-    puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}" if @total_number_of_bursts != 0
+    if @total_number_of_bursts != 0
+      puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
+      puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
+    end
   end  
 
   def show_pids_and_rewriteable_device_queue_info
     @rewriteables.each_with_index do |rewriteable, i| 
       rewriteable.view_device(i+1)
     end
-    puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}" if @total_number_of_bursts != 0
+    if @total_number_of_bursts != 0
+      puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
+      puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
+    end
   end
 end 
 
