@@ -15,7 +15,7 @@ class ReadyQueue
     return puts "Ready Queue is empty" if @queue.empty?
     @queue.length.times do
       temp = @queue.pop
-      puts "PCB with p_id: #{temp.p_id} is in the ReadyQueue"
+      puts "PCB with p_id: #{temp.p_id} is in the ReadyQueue. Total time it's used the CPU is #{temp.time_spent_in_cpu}"
       @queue << temp
     end
   end
