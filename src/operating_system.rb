@@ -79,6 +79,7 @@ class Os
     pcb_to_terminate = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
     puts "How long was this PCB in the CPU just now?"
     time_spent = gets.chomp
+    time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
     pcb_to_terminate.time_spent_in_cpu += time_spent.to_i
     @total_time_processes_spent_on_cpu += pcb_to_terminate.time_spent_in_cpu # update the total global cpu time
     @total_number_of_bursts += 1 # update the total global burst occurences
@@ -130,6 +131,7 @@ class Os
       new_printer_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
       puts "How long was this PCB in the CPU?"
       time_spent = gets.chomp
+      time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
       new_printer_pcb.time_spent_in_cpu += time_spent.to_i
       new_printer_pcb.burst_occurs # burst occurs here
       @total_time_processes_spent_on_cpu += new_printer_pcb.time_spent_in_cpu # update the total global cpu time
@@ -147,6 +149,7 @@ class Os
       new_disk_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
       puts "How long was this PCB in the CPU?"
       time_spent = gets.chomp
+      time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
       new_disk_pcb.time_spent_in_cpu += time_spent.to_i
       new_disk_pcb.burst_occurs # burst occurs here
       @total_time_processes_spent_on_cpu += new_disk_pcb.time_spent_in_cpu # update the total global cpu time
@@ -164,6 +167,7 @@ class Os
       new_rewriteable_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
       puts "How long was this PCB in the CPU?"
       time_spent = gets.chomp
+      time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
       new_rewriteable_pcb.time_spent_in_cpu += time_spent.to_i
       new_rewriteable_pcb.burst_occurs # burst occurs here
       @total_time_processes_spent_on_cpu += new_rewriteable_pcb.time_spent_in_cpu # update the total global cpu time

@@ -21,7 +21,6 @@ class Device
   end
   #  device  | p_id  | file_name  |  R/W  |  Size  |  CPU Time  |  Avg Burst Time  
   #  ============================================================================
-  #
   def view_device(i)
     return puts "#{device}'s #{i} queue is empty" if @queue.empty?
     # TODO Make sure printing devices do not exceed 23 lines

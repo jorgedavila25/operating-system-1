@@ -53,4 +53,11 @@ module Helpers
   def check_if_all_are_zeros(*args)
     args.inject{|sum,x| sum + x }
   end
+
+  def check_if_num_is_less_than_time_slice(time_slice, candidate)
+    return false if check_if_integer(candidate) == false
+    return true if (candidate < time_slice and candidate > 0 )
+    puts "Please enter a number greater than 0 but less than #{time_slice}"
+    return false
+  end
 end 
