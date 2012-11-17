@@ -194,11 +194,11 @@ class Os
 
     if device == 'D'
       return puts "This disk does not exist" if @disks.size < num
-      return puts "there are no pcb's on disk's #{num} queue" if @disks[num-1].number_of_pcb_in_device == 0 
+      return puts "there are no pcb's on disk's #{num} queue" if @disks[num-1].number_of_pcb_in_device == 0
       @disk_pcb_completed = @disks[num-1].dequeue_device
       @disk_pcb_completed.time_spent_in_cpu = 0
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@disk_pcb_completed) : @os_ready_queue.enqueue_pcb(@disk_pcb_completed)
-      puts "You've moved disk #{num} PCB with p_id: #{@disk_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)"
+      puts "You've moved disk #{num} PCB with p_id: #{@disk_pcb_completed.p_id} and cylinder location #{@disk_pcb_completed.cylinder_num} from the device queue to the ReadyQueue (or possibly CPU)"
     end
     
     if device == 'C'

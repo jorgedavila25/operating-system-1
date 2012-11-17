@@ -2,7 +2,7 @@ module Helpers
 
   def check_if_integer(candidate)
     begin
-        @location_memory = Integer(candidate)
+        h = Integer(candidate)
         return true
     rescue ArgumentError
         puts "Please enter a valid integer, try again"

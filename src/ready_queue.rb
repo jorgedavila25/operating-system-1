@@ -7,7 +7,6 @@ class ReadyQueue
   end
 
   def enqueue_pcb(arg)
-    puts "PCB made it in ready queue"
     @queue << arg
   end
 
