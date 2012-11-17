@@ -65,7 +65,6 @@ class Disk < Device
     if @red_light == 0
       @processes_in_queue << pcb
     elsif @red_light == 1
-      puts "ENQUEIN NEW ARRAY"
       @new_array << pcb
     end
   end
@@ -77,7 +76,6 @@ class Disk < Device
   def c_look_alogrithm  
     # first time through, to get the disk head started
     if @once == 0 
-      puts "should be output once"
       @once = 1
       @processes_in_queue.sort_by!{|obj| obj.cylinder_num} # sort by the cylinder num
       @head = @processes_in_queue[0].cylinder_num # save the current num you're about to return
