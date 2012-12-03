@@ -62,6 +62,10 @@ module Helpers
     args.inject{|sum,x| sum + x }
   end
 
+  def compute_number_of_pages(total_memory, page_size)
+    total_memory/page_size
+  end
+
   def check_if_num_is_less_than_time_slice(time_slice, candidate)
     return false if check_if_integer(candidate) == false
     return true if (candidate < time_slice and candidate > 0 )

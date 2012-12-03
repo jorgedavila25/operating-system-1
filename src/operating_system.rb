@@ -3,6 +3,7 @@ require 'thread'
 require './pcb'
 require './ready_queue'
 require './cpu'
+require './page'
 
 class Os
   include Helpers
@@ -15,6 +16,8 @@ class Os
     @total_number_of_bursts = 0
     @total_size_of_memory = 0
     @size_of_a_page = 0
+    @page_num = 0
+    @total_of_pages_in_os = 0
 
     puts "Welcome to your OS"
 
@@ -39,11 +42,13 @@ class Os
 
     puts "What is the total size of memory?"
     @total_size_of_memory = gets.chomp
-    @total_size_of_memory = gets.chomp while (check_if_integer(@total_size_of_memory) == false)
+    @total_size_of_memory = gets.chomp while (check_power_of_two(@total_size_of_memory.to_i) == false)
 
     puts "What is the size of a page?"
     @size_of_a_page = gets.chomp.to_i
     @size_of_a_page = gets.chomp while (check_power_of_two(@size_of_a_page.to_i) == false)
+    @total_of_pages_in_os = compute_number_of_pages(@total_size_of_memory.to_i, @size_of_a_page.to_i)
+    generate_pages(@total_of_pages_in_os.to_i)
 
     abort("you created no devices, please start the program again") if (check_if_all_are_zeros(@num_printers.to_i, @num_rewriteables.to_i, @num_disks.to_i) == 0)
     abort("you created negative devices, please start the program again") if (@num_printers.to_i < 0 || @num_disks.to_i < 0 || @num_rewriteables.to_i < 0)
@@ -51,6 +56,7 @@ class Os
 
   def initiate_commands
     while true
+      puts "Number of pages available: #{@os_pages.size} out of #{@total_of_pages_in_os}"
       puts "Enter a command ('A' => PCB, 'S' => Snapshot, 't' => Terminate, 'T' => Time Slice, 'quit' => shut down):  "
       @command = gets.chomp
       @command = gets.chomp while (check_if_proper_input(@command) == false)
@@ -98,6 +104,13 @@ class Os
   end
 
   private
+
+  def generate_pages(num)
+    @os_pages = Array.new
+    1.upto(num) do |i|
+      @os_pages << Page.new(i)
+    end
+  end
 
   def generate_printers(num)
     @printers = Array.new
