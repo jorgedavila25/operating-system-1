@@ -7,6 +7,7 @@ class Pcb
   def initialize(pid)
     @time_spent_in_cpu = 0
     @bursts = Array.new
+    @pages_in_pcb = Array.new
     puts "created a PCB"
     @p_id = pid
     puts "p id number is #{@p_id}"
@@ -14,10 +15,18 @@ class Pcb
 
   def burst_occurs
     @bursts << @time_spent_in_cpu
-  end 
+  end
 
   def compute_average_burst_time
     @bursts.inject{ |sum, x| sum + x }.to_f / @bursts.size
+  end
+
+  def page_assigned_to_pcb(page)
+    @pages_in_pcb << page
+  end
+
+  def num_of_pages_in_pcb
+    @pages_in_pcb.size
   end
 
   def passed_to_device_queue_is_printer
@@ -48,7 +57,7 @@ class Pcb
       puts "Enter the size of this file:"
       @size_of_file = gets.chomp.to_i
       @size_of_file = gets.chomp.to_i while (check_if_integer(@size_of_file) == false)
-    end    
+    end
   end
 
   def passed_to_device_queue

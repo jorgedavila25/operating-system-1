@@ -88,17 +88,22 @@ class Os
       return
     end
     num_of_pages_pcb_takes = compute_how_many_pages_needed_for_pcb(size.to_f,  @size_of_a_page.to_f)
+    @p_id = @p_id + 1
     if num_of_pages_pcb_takes < @os_pages.size
       # you are able to create this process
+      new_pcb = Pcb.new(@p_id)
+      num_of_pages_pcb_takes.times do
+        new_pcb.page_assigned_to_pcb(@os_pages.shift)
+      end
+      @os_ready_queue.enqueue_pcb(new_pcb)
+      @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_cpu.get_cpu_length == 0
+      puts "the number of pcb's in the Ready Queue #{@os_ready_queue.get_ready_queue_length}"
+      puts "the number of pcb's in the CPU: #{@os_cpu.get_cpu_length}"
     else
       # send to job pool
+
+
     end
-    @p_id = @p_id + 1
-    new_pcb = Pcb.new(@p_id)
-    @os_ready_queue.enqueue_pcb(new_pcb)
-    @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_cpu.get_cpu_length == 0
-    puts "the number of pcb's in the Ready Queue #{@os_ready_queue.get_ready_queue_length}"
-    puts "the number of pcb's in the CPU: #{@os_cpu.get_cpu_length}"
   end
 
   def terminate_process
