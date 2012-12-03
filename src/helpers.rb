@@ -7,7 +7,15 @@ module Helpers
     rescue ArgumentError
         puts "Please enter a valid integer, try again"
         return false
-    end      
+    end
+  end
+
+  def check_power_of_two(candidate)
+    if !(candidate.to_s(2).scan(/1/).size == 1)
+      puts "Enter a number with power of 2"
+      return false
+    end
+    true
   end
 
   def check_if_in_cylinder_bounds(candidate, bounds)
@@ -31,9 +39,9 @@ module Helpers
     puts "Please enter a proper input"
     return false
   end
-  
+
   def check_if_proper_input_for_snapshot_mode(arg)
-    return true if /^[rpdc]{1}$/.match(arg) 
+    return true if /^[rpdc]{1}$/.match(arg)
     puts "Please enter a proper command for snapshot mode"
     return false
   end
@@ -60,4 +68,4 @@ module Helpers
     puts "Please enter a number greater than 0 but less than #{time_slice}"
     return false
   end
-end 
+end

@@ -13,10 +13,11 @@ class Os
     @p_id = -1
     @total_time_processes_spent_on_cpu = 0
     @total_number_of_bursts = 0
-
+    @total_size_of_memory = 0
+    @size_of_a_page = 0
 
     puts "Welcome to your OS"
-    
+
     puts "How many printers do you want to insert?"
     @num_printers = gets.chomp
     @num_printers = gets.chomp while (check_if_integer(@num_printers) == false)
@@ -26,7 +27,7 @@ class Os
     @num_disks = gets.chomp
     @num_disks = gets.chomp while (check_if_integer(@num_disks) == false)
     generate_disks(@num_disks.to_i)
-    
+
     puts "How many rewriteables do you want to insert?"
     @num_rewriteables = gets.chomp
     @num_rewriteables = gets.chomp while (check_if_integer(@num_rewriteables) == false)
@@ -35,6 +36,14 @@ class Os
     puts "What is the length of a time slice (in milliseconds)?"
     @time_slice = gets.chomp
     @time_slice = gets.chomp while (check_if_integer(@time_slice) == false)
+
+    puts "What is the total size of memory?"
+    @total_size_of_memory = gets.chomp
+    @total_size_of_memory = gets.chomp while (check_if_integer(@total_size_of_memory) == false)
+
+    puts "What is the size of a page?"
+    @size_of_a_page = gets.chomp.to_i
+    @size_of_a_page = gets.chomp while (check_power_of_two(@size_of_a_page.to_i) == false)
 
     abort("you created no devices, please start the program again") if (check_if_all_are_zeros(@num_printers.to_i, @num_rewriteables.to_i, @num_disks.to_i) == 0)
     abort("you created negative devices, please start the program again") if (@num_printers.to_i < 0 || @num_disks.to_i < 0 || @num_rewriteables.to_i < 0)
@@ -97,7 +106,7 @@ class Os
 
   def generate_disks(num)
     # TODO: find a better way to keep track of the # of iterations
-    i = 1 
+    i = 1
     @disks = Array.new
     num.times do |disk|
       disk = Disk.new
@@ -185,11 +194,11 @@ class Os
   def signal_completion(device, num)
     if device == 'P'
       return puts "This printer does not exist" if @printers.size < num
-      return puts "there are no pcb's on printer's #{num} queue" if @printers[num-1].number_of_pcb_in_device == 0 
+      return puts "there are no pcb's on printer's #{num} queue" if @printers[num-1].number_of_pcb_in_device == 0
       @printer_pcb_completed = @printers[num-1].dequeue_device
       @printer_pcb_completed.time_spent_in_cpu = 0 # reset the time spent in CPU
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@printer_pcb_completed) : @os_ready_queue.enqueue_pcb(@printer_pcb_completed)
-      puts "You've moved printer #{num} PCB with p_id: #{@printer_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)" 
+      puts "You've moved printer #{num} PCB with p_id: #{@printer_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)"
     end
 
     if device == 'D'
@@ -200,10 +209,10 @@ class Os
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@disk_pcb_completed) : @os_ready_queue.enqueue_pcb(@disk_pcb_completed)
       puts "You've moved disk #{num} PCB with p_id: #{@disk_pcb_completed.p_id} and cylinder location #{@disk_pcb_completed.cylinder_num} from the device queue to the ReadyQueue (or possibly CPU)"
     end
-    
+
     if device == 'C'
       return puts "This rewriteable does not exist" if @rewriteables.size < num
-      return puts "there are no pcb's on rewriteable's #{num} queue" if @rewriteables[num-1].number_of_pcb_in_device == 0 
+      return puts "there are no pcb's on rewriteable's #{num} queue" if @rewriteables[num-1].number_of_pcb_in_device == 0
       @rewriteable_pcb_completed = @rewriteables[num-1].dequeue_device
       @rewriteable_pcb_completed.time_spent_in_cpu = 0
       @os_cpu.get_cpu_length == 0 ? @os_cpu.insert_to_cpu(@rewriteable_pcb_completed) : @os_ready_queue.enqueue_pcb(@rewriteable_pcb_completed)
@@ -218,7 +227,7 @@ class Os
     @os_ready_queue.enqueue_pcb(pcb)
     @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_cpu.get_cpu_length == 0
   end
-  
+
   def show_pids_processes_in_ready_queue
     @os_cpu.view_cpu
     @os_ready_queue.view_ready_queue
@@ -230,7 +239,7 @@ class Os
 
   def show_pids_and_printer_device_queue_info
     @printers.each_with_index do |printer, i|
-      printer.view_device(i+1) 
+      printer.view_device(i+1)
     end
     if @total_number_of_bursts != 0
       puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
@@ -239,17 +248,17 @@ class Os
   end
 
   def show_pids_and_disk_device_queue_info
-    @disks.each_with_index do |disk, i| 
+    @disks.each_with_index do |disk, i|
       disk.view_device(i+1)
     end
     if @total_number_of_bursts != 0
       puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
       puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
     end
-  end  
+  end
 
   def show_pids_and_rewriteable_device_queue_info
-    @rewriteables.each_with_index do |rewriteable, i| 
+    @rewriteables.each_with_index do |rewriteable, i|
       rewriteable.view_device(i+1)
     end
     if @total_number_of_bursts != 0
@@ -257,5 +266,5 @@ class Os
       puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
     end
   end
-end 
+end
 
