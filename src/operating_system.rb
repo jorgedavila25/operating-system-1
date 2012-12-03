@@ -87,6 +87,12 @@ class Os
       puts "The size of this process is larger than total memory, it will be rejected"
       return
     end
+    num_of_pages_pcb_takes = compute_how_many_pages_needed_for_pcb(size.to_f,  @size_of_a_page.to_f)
+    if num_of_pages_pcb_takes < @os_pages.size
+      # you are able to create this process
+    else
+      # send to job pool
+    end
     @p_id = @p_id + 1
     new_pcb = Pcb.new(@p_id)
     @os_ready_queue.enqueue_pcb(new_pcb)

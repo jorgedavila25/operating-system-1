@@ -70,6 +70,10 @@ module Helpers
     total_memory/page_size
   end
 
+  def compute_how_many_pages_needed_for_pcb(size_of_pcb, page_size)
+    (size_of_pcb/page_size).ceil
+  end
+
   def check_if_num_is_less_than_time_slice(time_slice, candidate)
     return false if check_if_integer(candidate) == false
     return true if (candidate < time_slice and candidate > 0 )
