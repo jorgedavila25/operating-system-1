@@ -81,6 +81,12 @@ class Os
   end
 
   def arrival_of_process
+    puts "Enter the size of this process: "
+    size = gets.chop.to_i
+    if check_if_pcb_size_is_greater_than_memory(@total_size_of_memory.to_i, size.to_i) == true
+      puts "The size of this process is larger than total memory, it will be rejected"
+      return
+    end
     @p_id = @p_id + 1
     new_pcb = Pcb.new(@p_id)
     @os_ready_queue.enqueue_pcb(new_pcb)

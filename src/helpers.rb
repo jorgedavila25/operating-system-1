@@ -52,6 +52,10 @@ module Helpers
     return false
   end
 
+  def check_if_pcb_size_is_greater_than_memory(total_memory, candidate)
+    candidate > total_memory ? true : false
+  end
+
   def check_if_yes_or_no(candidate)
     return true if (candidate == "yes" || candidate == "no")
     puts "Please enter yes or not"
