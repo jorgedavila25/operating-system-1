@@ -94,7 +94,6 @@ class Os
     new_pcb = Pcb.new(@p_id)
     new_pcb.set_pcb_size(size.to_i)
     if num_of_pages_pcb_takes.to_i <= @os_pages.size
-      # you are able to create this process
       num_of_pages_pcb_takes.times do
         new_pcb.page_assigned_to_pcb(@os_pages.shift)
       end
@@ -121,14 +120,21 @@ class Os
 
     @os_pages = @os_pages + pcb_to_terminate.pages_in_pcb # return the pages to OS from PCB that's getting terminated
 
-    pcb_from_job_pool = check_what_pcb_to_send_from_job_pool_to_ready_queue
-    unless pcb_from_job_pool.nil?
-      @os_ready_queue.enqueue_pcb(pcb_from_job_pool)
+    still_room = true
+    while(still_room)
+      pcb_from_job_pool = check_what_pcb_to_send_from_job_pool_to_ready_queue
+      if pcb_from_job_pool.nil?
+        still_room = false
+      else
+        pcb_from_job_pool[0].times do
+          pcb_from_job_pool[1].page_assigned_to_pcb(@os_pages.shift)
+        end
+        @os_ready_queue.enqueue_pcb(pcb_from_job_pool[1])
+      end
     end
     puts "You've successfully terminated pcb with p_id #{pcb_to_terminate.p_id}"
     puts "The total time CPU time is #{pcb_to_terminate.time_spent_in_cpu}"
     @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
-    # Check to see if we can move a pcb from the  job pool to the Ready Queue
   end
 
   private
@@ -319,7 +325,7 @@ class Os
         if @os_pages.size.to_i >= num_of_pages_pcb_takes # if pages available is greater than the num pages it takes
           temp = pcb
           @os_job_pool.queue.delete_at(i)
-          return temp
+          return num_of_pages_pcb_takes, temp # return the number of pages it requires, return the pcb
         end
       end
     end

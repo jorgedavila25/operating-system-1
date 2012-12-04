@@ -1,7 +1,7 @@
 require 'thread'
 
 class Cpu
-  
+
   def initialize
     @queue = Queue.new
   end
@@ -12,14 +12,14 @@ class Cpu
   end
 
   def dequeue_pcb
-    @queue.pop 
+    @queue.pop
   end
 
   def view_cpu
     return puts "cpu is empty" if @queue.empty?
     @queue.length.times do
       temp = @queue.pop
-      puts "PCB with p_id: #{temp.p_id} is in the CPU. Total time it's used the CPU is #{temp.time_spent_in_cpu}"
+      puts "PCB with p_id: #{temp.p_id} is in the CPU. Total time it's used the CPU is #{temp.time_spent_in_cpu} ...#{temp.pages_in_pcb.size} is the num of pages this pcb has"
       @queue << temp
     end
   end
