@@ -41,7 +41,7 @@ module Helpers
   end
 
   def check_if_proper_input_for_snapshot_mode(arg)
-    return true if /^[rpdc]{1}$/.match(arg)
+    return true if /^[rpdcm]{1}$/.match(arg)
     puts "Please enter a proper command for snapshot mode"
     return false
   end

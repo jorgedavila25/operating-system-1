@@ -73,13 +73,14 @@ class Os
 
   def snapshot_mode
     puts "Snapshot Mode"
-    puts "These are the options you have: r,p,d and c"
+    puts "These are the options you have: r, m, p, d and c"
     @snapshot_mode_command = gets.chomp
     @snapshot_mode_command = gets.chomp while (check_if_proper_input_for_snapshot_mode(@snapshot_mode_command) == false)
     show_pids_processes_in_ready_queue if @snapshot_mode_command == 'r'
     show_pids_and_printer_device_queue_info if @snapshot_mode_command == 'p'
     show_pids_and_disk_device_queue_info if @snapshot_mode_command == 'd'
     show_pids_and_rewriteable_device_queue_info if @snapshot_mode_command == 'c'
+    show_system_memory_information if @snapshot_mode_command == 'm'
   end
 
   def arrival_of_process
@@ -313,6 +314,10 @@ class Os
       puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
       puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
     end
+  end
+
+  def show_system_memory_information
+    puts "Entered System Memory Information"
   end
 
   def check_what_pcb_to_send_from_job_pool_to_ready_queue
