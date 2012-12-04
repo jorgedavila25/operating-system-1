@@ -8,6 +8,7 @@ class Pcb
     @time_spent_in_cpu = 0
     @bursts = Array.new
     @pages_in_pcb = Array.new
+    @size_of_pcb = 0
     puts "created a PCB"
     @p_id = pid
     puts "p id number is #{@p_id}"
@@ -27,6 +28,10 @@ class Pcb
 
   def num_of_pages_in_pcb
     @pages_in_pcb.size
+  end
+
+  def set_pcb_size(size)
+    @size_of_pcb = size
   end
 
   def passed_to_device_queue_is_printer

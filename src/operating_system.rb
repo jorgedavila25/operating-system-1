@@ -4,12 +4,14 @@ require './pcb'
 require './ready_queue'
 require './cpu'
 require './page'
+require './job_pool_queue'
 
 class Os
   include Helpers
 
   def initialize
     @os_ready_queue = ReadyQueue.new
+    @os_job_pool = JobPool.new
     @os_cpu = Cpu.new
     @p_id = -1
     @total_time_processes_spent_on_cpu = 0
@@ -89,9 +91,10 @@ class Os
     end
     num_of_pages_pcb_takes = compute_how_many_pages_needed_for_pcb(size.to_f,  @size_of_a_page.to_f)
     @p_id = @p_id + 1
-    if num_of_pages_pcb_takes < @os_pages.size
+    new_pcb = Pcb.new(@p_id)
+    new_pcb.set_pcb_size(size.to_i)
+    if num_of_pages_pcb_takes <= @os_pages.size
       # you are able to create this process
-      new_pcb = Pcb.new(@p_id)
       num_of_pages_pcb_takes.times do
         new_pcb.page_assigned_to_pcb(@os_pages.shift)
       end
@@ -101,8 +104,8 @@ class Os
       puts "the number of pcb's in the CPU: #{@os_cpu.get_cpu_length}"
     else
       # send to job pool
-
-
+      puts "made it into the pool job"
+      @os_job_pool.enqueue_pcb(new_pcb)
     end
   end
 
