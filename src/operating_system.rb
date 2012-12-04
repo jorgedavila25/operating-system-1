@@ -93,7 +93,7 @@ class Os
     @p_id = @p_id + 1
     new_pcb = Pcb.new(@p_id)
     new_pcb.set_pcb_size(size.to_i)
-    if num_of_pages_pcb_takes <= @os_pages.size
+    if num_of_pages_pcb_takes.to_i <= @os_pages.size
       # you are able to create this process
       num_of_pages_pcb_takes.times do
         new_pcb.page_assigned_to_pcb(@os_pages.shift)
@@ -119,7 +119,7 @@ class Os
     @total_time_processes_spent_on_cpu += pcb_to_terminate.time_spent_in_cpu # update the total global cpu time
     @total_number_of_bursts += 1 # update the total global burst occurences
 
-    @os_pages += pcb_to_terminate.pages_in_pcb # return the pages to OS from PCB that's getting terminated
+    @os_pages = @os_pages + pcb_to_terminate.pages_in_pcb # return the pages to OS from PCB that's getting terminated
 
     pcb_from_job_pool = check_what_pcb_to_send_from_job_pool_to_ready_queue
     unless pcb_from_job_pool.nil?
@@ -311,13 +311,12 @@ class Os
 
   def check_what_pcb_to_send_from_job_pool_to_ready_queue
     @os_job_pool.queue.sort_by!{|obj| obj.size_of_pcb}.reverse!  #sort, largest first
-    num_of_pages_available = @total_of_pages_in_os.to_i - @os_pages.size.to_i
-    if num_of_pages_available > 0
+    if @os_pages.size.to_i > 0
       puts "there is room to fit in a ready queue"
       @os_job_pool.queue.each_with_index do |pcb, i |
         puts "These are the PCB sizes in the Job Queue #{pcb.size_of_pcb} with pid #{pcb.p_id}"
         num_of_pages_pcb_takes = compute_how_many_pages_needed_for_pcb(pcb.size_of_pcb.to_f,  @size_of_a_page.to_f)
-        if num_of_pages_available >= num_of_pages_pcb_takes # if pages available is greater than the num pages it takes
+        if @os_pages.size.to_i >= num_of_pages_pcb_takes # if pages available is greater than the num pages it takes
           temp = pcb
           @os_job_pool.queue.delete_at(i)
           return temp
