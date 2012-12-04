@@ -118,9 +118,17 @@ class Os
     pcb_to_terminate.time_spent_in_cpu += time_spent.to_i
     @total_time_processes_spent_on_cpu += pcb_to_terminate.time_spent_in_cpu # update the total global cpu time
     @total_number_of_bursts += 1 # update the total global burst occurences
+
+    @os_pages += pcb_to_terminate.pages_in_pcb # return the pages to OS from PCB that's getting terminated
+
+    pcb_from_job_pool = check_what_pcb_to_send_from_job_pool_to_ready_queue
+    unless pcb_from_job_pool.nil?
+      @os_ready_queue.enqueue_pcb(pcb_from_job_pool)
+    end
     puts "You've successfully terminated pcb with p_id #{pcb_to_terminate.p_id}"
     puts "The total time CPU time is #{pcb_to_terminate.time_spent_in_cpu}"
     @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
+    # Check to see if we can move a pcb from the  job pool to the Ready Queue
   end
 
   private
@@ -252,6 +260,7 @@ class Os
       puts "You've moved rewriteable #{num} PCB with p_id: #{@rewriteable_pcb_completed.p_id} from the device queue to the ReadyQueue (or possibly CPU)"
     end
   end
+
   def time_slice_ends
     return puts "Can't operate a time slice, CPU empty" if @os_cpu.get_cpu_length == 0
     pcb = @os_cpu.dequeue_pcb
@@ -298,6 +307,24 @@ class Os
       puts "The System's average total CPU Time is #{@total_time_processes_spent_on_cpu/@total_number_of_bursts}"
       puts "Total time of CPU usage: #{@total_time_processes_spent_on_cpu} | Total number of bursts #{@total_number_of_bursts}"
     end
+  end
+
+  def check_what_pcb_to_send_from_job_pool_to_ready_queue
+    @os_job_pool.queue.sort_by!{|obj| obj.size_of_pcb}.reverse!  #sort, largest first
+    num_of_pages_available = @total_of_pages_in_os.to_i - @os_pages.size.to_i
+    if num_of_pages_available > 0
+      puts "there is room to fit in a ready queue"
+      @os_job_pool.queue.each_with_index do |pcb, i |
+        puts "These are the PCB sizes in the Job Queue #{pcb.size_of_pcb} with pid #{pcb.p_id}"
+        num_of_pages_pcb_takes = compute_how_many_pages_needed_for_pcb(pcb.size_of_pcb.to_f,  @size_of_a_page.to_f)
+        if num_of_pages_available >= num_of_pages_pcb_takes # if pages available is greater than the num pages it takes
+          temp = pcb
+          @os_job_pool.queue.delete_at(i)
+          return temp
+        end
+      end
+    end
+    nil
   end
 end
 

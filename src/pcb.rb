@@ -2,7 +2,7 @@ require './helpers'
 
 class Pcb
   include Helpers
-  attr_accessor :file_name, :location_memory, :read_or_write, :p_id, :size_of_file, :cylinder_num, :time_spent_in_cpu
+  attr_accessor :file_name, :location_memory, :read_or_write, :p_id, :size_of_file, :cylinder_num, :time_spent_in_cpu, :pages_in_pcb, :size_of_pcb
 
   def initialize(pid)
     @time_spent_in_cpu = 0

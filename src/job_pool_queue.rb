@@ -1,7 +1,7 @@
 require 'thread'
 
 class JobPool
-
+  attr_accessor :queue
   def initialize
     @queue = Array.new
   end
