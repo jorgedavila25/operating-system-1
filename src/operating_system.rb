@@ -5,6 +5,7 @@ require './ready_queue'
 require './cpu'
 require './page'
 require './job_pool_queue'
+require './frame_table'
 
 class Os
   include Helpers
@@ -51,6 +52,7 @@ class Os
     @size_of_a_page = gets.chomp while (check_power_of_two(@size_of_a_page.to_i) == false)
     @total_of_pages_in_os = compute_number_of_pages(@total_size_of_memory.to_i, @size_of_a_page.to_i)
     generate_pages(@total_of_pages_in_os.to_i)
+    @os_frame_table = FrameTable.new(@total_of_pages_in_os.to_i) # create frame table
 
     abort("you created no devices, please start the program again") if (check_if_all_are_zeros(@num_printers.to_i, @num_rewriteables.to_i, @num_disks.to_i) == 0)
     abort("you created negative devices, please start the program again") if (@num_printers.to_i < 0 || @num_disks.to_i < 0 || @num_rewriteables.to_i < 0)
@@ -58,7 +60,7 @@ class Os
 
   def initiate_commands
     while true
-      puts "Number of pages available: #{@os_pages.size} out of #{@total_of_pages_in_os}"
+      puts "Number of frames available: #{@os_pages.size} out of #{@total_of_pages_in_os}"
       puts "Enter a command ('A' => PCB, 'S' => Snapshot, 't' => Terminate, 'T' => Time Slice, 'quit' => shut down):  "
       @command = gets.chomp
       @command = gets.chomp while (check_if_proper_input(@command) == false)
@@ -96,7 +98,12 @@ class Os
     new_pcb.set_pcb_size(size.to_i)
     if num_of_pages_pcb_takes.to_i <= @os_pages.size
       num_of_pages_pcb_takes.times do
-        new_pcb.page_assigned_to_pcb(@os_pages.shift)
+        # update the FRAME TABLE
+        # new_pcb is the PCB (has id)
+        # os_pages (pages with page ID)
+        page = @os_pages.shift
+        @os_frame_table.set_frame_table(page.page_id, new_pcb)
+        new_pcb.page_assigned_to_pcb(page)
       end
       @os_ready_queue.enqueue_pcb(new_pcb)
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_cpu.get_cpu_length == 0
@@ -128,6 +135,9 @@ class Os
         still_room = false
       else
         pcb_from_job_pool[0].times do
+          # update the FRAME TABLE
+          # pcb_from_job_pool[1] is the PCB (has id)
+          # os_pages (pages with page ID)
           pcb_from_job_pool[1].page_assigned_to_pcb(@os_pages.shift)
         end
         @os_ready_queue.enqueue_pcb(pcb_from_job_pool[1])
@@ -317,11 +327,12 @@ class Os
   end
 
   def show_system_memory_information
-    puts "Entered System Memory Information"
+    @os_frame_table.view_frame_table
+    @os_frame_table.view_free_frame_list(@os_pages)
   end
 
   def check_what_pcb_to_send_from_job_pool_to_ready_queue
-    @os_job_pool.queue.sort_by!{|obj| obj.size_of_pcb}.reverse!  #sort, largest first
+    @os_job_pool.queue.sort_by!{|obj| obj.size_of_pcb}.reverse!  #sort largest first
     if @os_pages.size.to_i > 0
       puts "there is room to fit in a ready queue"
       @os_job_pool.queue.each_with_index do |pcb, i |
@@ -330,7 +341,7 @@ class Os
         if @os_pages.size.to_i >= num_of_pages_pcb_takes # if pages available is greater than the num pages it takes
           temp = pcb
           @os_job_pool.queue.delete_at(i)
-          return num_of_pages_pcb_takes, temp # return the number of pages it requires, return the pcb
+          return num_of_pages_pcb_takes, temp
         end
       end
     end
