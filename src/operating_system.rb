@@ -126,8 +126,8 @@ class Os
     @total_time_processes_spent_on_cpu += pcb_to_terminate.time_spent_in_cpu # update the total global cpu time
     @total_number_of_bursts += 1 # update the total global burst occurences
 
+    pcb_to_terminate.pages_in_pcb.each {|x| @os_frame_table.update_after_terminating_a_pcb((x.page_id.to_i-1) )} # clean up frame table
     @os_pages = @os_pages + pcb_to_terminate.pages_in_pcb # return the pages to OS from PCB that's getting terminated
-
     still_room = true
     while(still_room)
       pcb_from_job_pool = check_what_pcb_to_send_from_job_pool_to_ready_queue
@@ -135,10 +135,9 @@ class Os
         still_room = false
       else
         pcb_from_job_pool[0].times do
-          # update the FRAME TABLE
-          # pcb_from_job_pool[1] is the PCB (has id)
-          # os_pages (pages with page ID)
-          pcb_from_job_pool[1].page_assigned_to_pcb(@os_pages.shift)
+          page = @os_pages.shift
+          @os_frame_table.set_frame_table(page.page_id, pcb_from_job_pool[1])
+          pcb_from_job_pool[1].page_assigned_to_pcb(page)
         end
         @os_ready_queue.enqueue_pcb(pcb_from_job_pool[1])
       end

@@ -27,4 +27,8 @@ class FrameTable
       puts "Page: #{page.page_id} is available"
     end
   end
+
+  def update_after_terminating_a_pcb(index)
+    @frame_table[index] = nil
+  end
 end
