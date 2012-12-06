@@ -10,7 +10,7 @@ class JobPool
     @queue << arg
   end
 
-  def view_ready_queue
+  def view_job_pool
     return puts "Job Queue is empty" if @queue.empty?
     @queue.each do |temp|
       puts "PCB with p_id: #{temp.p_id} is in the Job Pool. Total time it's used the CPU is #{temp.time_spent_in_cpu}"

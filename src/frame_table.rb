@@ -22,7 +22,8 @@ class FrameTable
   end
 
   def view_free_frame_list(frames_from_os)
-    puts "Free Frame List"
+    puts "Free Frame List:"
+    return puts"everything is occupied" if frames_from_os.empty?
     frames_from_os.each do |page|
       puts "Page: #{page.page_id} is available"
     end

@@ -14,7 +14,9 @@ class ReadyQueue
     return puts "Ready Queue is empty" if @queue.empty?
     @queue.length.times do
       temp = @queue.pop
-      puts "PCB with p_id: #{temp.p_id} is in the ReadyQueue. Total time it's used the CPU is #{temp.time_spent_in_cpu} ...#{temp.pages_in_pcb.size} is the num of pages this pcb has"
+      print "PCB with p_id: #{temp.p_id} is in the ReadyQueue | Total CPU time: #{temp.time_spent_in_cpu} | Pages in Page Table: "
+      temp.pages_in_pcb.each {|x| print "#{x.page_id} "}
+      puts ""
       @queue << temp
     end
   end

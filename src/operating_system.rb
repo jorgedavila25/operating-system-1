@@ -24,32 +24,32 @@ class Os
 
     puts "Welcome to your OS"
 
-    puts "How many printers do you want to insert?"
+    print "How many printers do you want to insert? "
     @num_printers = gets.chomp
     @num_printers = gets.chomp while (check_if_integer(@num_printers) == false)
     generate_printers(@num_printers.to_i)
 
-    puts "How many disks do you want to insert?"
+    print "How many disks do you want to insert? "
     @num_disks = gets.chomp
     @num_disks = gets.chomp while (check_if_integer(@num_disks) == false)
     generate_disks(@num_disks.to_i)
 
-    puts "How many rewriteables do you want to insert?"
+    print "How many rewriteables do you want to insert? "
     @num_rewriteables = gets.chomp
     @num_rewriteables = gets.chomp while (check_if_integer(@num_rewriteables) == false)
     generate_rewriteables(@num_rewriteables.to_i)
 
-    puts "What is the length of a time slice (in milliseconds)?"
+    print "What is the length of a time slice (in milliseconds)? "
     @time_slice = gets.chomp
     @time_slice = gets.chomp while (check_if_integer(@time_slice) == false)
 
-    puts "What is the total size of memory?"
+    print "What is the total size of memory? "
     @total_size_of_memory = gets.chomp
-    @total_size_of_memory = gets.chomp while (check_power_of_two(@total_size_of_memory.to_i) == false)
+    @total_size_of_memory = gets.chomp while (check_if_integer(@total_size_of_memory.to_i) == false)
 
-    puts "What is the size of a page?"
+    print "What is the size of a page? "
     @size_of_a_page = gets.chomp.to_i
-    @size_of_a_page = gets.chomp while (check_power_of_two(@size_of_a_page.to_i) == false)
+    @size_of_a_page = gets.chomp while (check_power_of_two(@size_of_a_page.to_i) == false and check_smaller_than_memory(@size_of_a_page.to_i, @total_size_of_memory.to_i) == false)
     @total_of_pages_in_os = compute_number_of_pages(@total_size_of_memory.to_i, @size_of_a_page.to_i)
     generate_pages(@total_of_pages_in_os.to_i)
     @os_frame_table = FrameTable.new(@total_of_pages_in_os.to_i) # create frame table
@@ -61,7 +61,7 @@ class Os
   def initiate_commands
     while true
       puts "Number of frames available: #{@os_pages.size} out of #{@total_of_pages_in_os}"
-      puts "Enter a command ('A' => PCB, 'S' => Snapshot, 't' => Terminate, 'T' => Time Slice, 'quit' => shut down):  "
+      print "Enter a command ('A' => PCB, 'S' => Snapshot, 't' => Terminate, 'T' => Time Slice, 'quit' => shut down): "
       @command = gets.chomp
       @command = gets.chomp while (check_if_proper_input(@command) == false)
       arrival_of_process if @command == 'A'
@@ -75,7 +75,7 @@ class Os
 
   def snapshot_mode
     puts "Snapshot Mode"
-    puts "These are the options you have: r, m, p, d and c"
+    print "These are the options you have: r, m, p, d and c: "
     @snapshot_mode_command = gets.chomp
     @snapshot_mode_command = gets.chomp while (check_if_proper_input_for_snapshot_mode(@snapshot_mode_command) == false)
     show_pids_processes_in_ready_queue if @snapshot_mode_command == 'r'
@@ -86,7 +86,7 @@ class Os
   end
 
   def arrival_of_process
-    puts "Enter the size of this process: "
+    print "Enter the size of this process: "
     size = gets.chop.to_i
     if check_if_pcb_size_is_greater_than_memory(@total_size_of_memory.to_i, size.to_i) == true
       puts "The size of this process is larger than total memory, it will be rejected"
@@ -119,7 +119,7 @@ class Os
   def terminate_process
     return puts "Nothing to terminate, CPU empty" if @os_cpu.get_cpu_length == 0
     pcb_to_terminate = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0
-    puts "How long was this PCB in the CPU just now?"
+    print "How long was this PCB in the CPU just now? "
     time_spent = gets.chomp
     time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
     pcb_to_terminate.time_spent_in_cpu += time_spent.to_i
@@ -167,7 +167,7 @@ class Os
     @disks = Array.new
     num.times do |disk|
       disk = Disk.new
-      puts "Enter the number of cylinders disk #{i} has: "
+      print "Enter the number of cylinders disk #{i} has: "
       num_of_cylinders = gets.chomp
       num_of_cylinders = gets.chomp while (check_if_integer(num_of_cylinders) == false)
       disk.set_num_of_cylinders(num_of_cylinders.to_i)
@@ -195,7 +195,7 @@ class Os
 
     if device == 'p' and num != 0 and num <= @printers.length
       new_printer_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
-      puts "How long was this PCB in the CPU?"
+      print "How long was this PCB in the CPU? "
       time_spent = gets.chomp
       time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
       new_printer_pcb.time_spent_in_cpu += time_spent.to_i
@@ -213,7 +213,7 @@ class Os
 
     if device == 'd' and num != 0 and num <= @disks.length
       new_disk_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
-      puts "How long was this PCB in the CPU?"
+      print "How long was this PCB in the CPU? "
       time_spent = gets.chomp
       time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
       new_disk_pcb.time_spent_in_cpu += time_spent.to_i
@@ -231,7 +231,7 @@ class Os
 
     if device == 'c' and num != 0 and num <= @rewriteables.length
       new_rewriteable_pcb = @os_cpu.dequeue_pcb if @os_cpu.get_cpu_length > 0 # getting pcb from cpu
-      puts "How long was this PCB in the CPU?"
+      print "How long was this PCB in the CPU? "
       time_spent = gets.chomp
       time_spent = gets.chomp while(check_if_num_is_less_than_time_slice(@time_slice.to_i, time_spent.to_i) == false)
       new_rewriteable_pcb.time_spent_in_cpu += time_spent.to_i
