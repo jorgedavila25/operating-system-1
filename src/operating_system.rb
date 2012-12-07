@@ -111,7 +111,7 @@ class Os
       puts "the number of pcb's in the CPU: #{@os_cpu.get_cpu_length}"
     else
       # send to job pool
-      puts "made it into the pool job"
+      puts "made it into the job pool"
       @os_job_pool.enqueue_pcb(new_pcb)
     end
   end
@@ -333,9 +333,7 @@ class Os
   def check_what_pcb_to_send_from_job_pool_to_ready_queue
     @os_job_pool.queue.sort_by!{|obj| obj.size_of_pcb}.reverse!  #sort largest first
     if @os_pages.size.to_i > 0
-      puts "there is room to fit in a ready queue"
       @os_job_pool.queue.each_with_index do |pcb, i |
-        puts "These are the PCB sizes in the Job Queue #{pcb.size_of_pcb} with pid #{pcb.p_id}"
         num_of_pages_pcb_takes = compute_how_many_pages_needed_for_pcb(pcb.size_of_pcb.to_f,  @size_of_a_page.to_f)
         if @os_pages.size.to_i >= num_of_pages_pcb_takes # if pages available is greater than the num pages it takes
           temp = pcb
