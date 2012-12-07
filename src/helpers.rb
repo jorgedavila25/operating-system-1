@@ -35,6 +35,15 @@ module Helpers
     end
   end
 
+  def logical_to_physical(logical_address, page_size, num_pages)
+    puts "enters logical_to_physical"
+    page_number = logical_address.to_i(16) / page_size.to_i
+    off_set =  logical_address.to_i(16) % page_size.to_i
+    frame_num = Random.rand(num_pages.to_i)
+    physical_adress = (frame_num * page_size.to_i) + off_set.to_i
+    physical_adress.to_s(16)
+  end
+
   def check_if_its_upper(candidate)
     return true if /[[:upper:]]/.match(candidate)
     false

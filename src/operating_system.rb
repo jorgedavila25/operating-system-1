@@ -49,7 +49,7 @@ class Os
 
     print "What is the size of a page? "
     @size_of_a_page = gets.chomp.to_i
-    @size_of_a_page = gets.chomp while (check_power_of_two(@size_of_a_page.to_i) == false and check_smaller_than_memory(@size_of_a_page.to_i, @total_size_of_memory.to_i) == false)
+    @size_of_a_page = gets.chomp while (check_power_of_two(@size_of_a_page.to_i) == false or check_smaller_than_memory(@size_of_a_page.to_i, @total_size_of_memory.to_i) == false)
     @total_of_pages_in_os = compute_number_of_pages(@total_size_of_memory.to_i, @size_of_a_page.to_i)
     generate_pages(@total_of_pages_in_os.to_i)
     @os_frame_table = FrameTable.new(@total_of_pages_in_os.to_i) # create frame table
@@ -202,7 +202,7 @@ class Os
       new_printer_pcb.burst_occurs # burst occurs here
       @total_time_processes_spent_on_cpu += new_printer_pcb.time_spent_in_cpu # update the total global cpu time
       @total_number_of_bursts += 1 # update the total global burst occurences
-      new_printer_pcb.passed_to_device_queue_is_printer
+      new_printer_pcb.passed_to_device_queue_is_printer(@size_of_a_page)
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
       @printers[num-1].enqueue_device(new_printer_pcb)
       puts "Number of pcb's in printer #{num} queue is: #{@printers[num-1].number_of_pcb_in_device}"
@@ -220,7 +220,7 @@ class Os
       new_disk_pcb.burst_occurs # burst occurs here
       @total_time_processes_spent_on_cpu += new_disk_pcb.time_spent_in_cpu # update the total global cpu time
       @total_number_of_bursts += 1 # update the total global burst occurences
-      new_disk_pcb.passed_to_device_queue_is_disk(@disks[num-1].num_of_cylinders)
+      new_disk_pcb.passed_to_device_queue_is_disk(@disks[num-1].num_of_cylinders, @size_of_a_page)
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
       @disks[num-1].enqueue_device(new_disk_pcb)
       puts "Number of pcb's in disks #{num} queue is: #{@disks[num-1].number_of_pcb_in_device}"
@@ -238,7 +238,7 @@ class Os
       new_rewriteable_pcb.burst_occurs # burst occurs here
       @total_time_processes_spent_on_cpu += new_rewriteable_pcb.time_spent_in_cpu # update the total global cpu time
       @total_number_of_bursts += 1
-      new_rewriteable_pcb.passed_to_device_queue
+      new_rewriteable_pcb.passed_to_device_queue(@size_of_a_page)
       @os_cpu.insert_to_cpu(@os_ready_queue.dequeue_pcb) if @os_ready_queue.get_ready_queue_length > 0
       @rewriteables[num-1].enqueue_device(new_rewriteable_pcb)
       puts "Number of pcb's in rewriteables #{num} queue is: #{@rewriteables[num-1].number_of_pcb_in_device}"

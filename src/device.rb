@@ -25,15 +25,15 @@ class Device
     @queue.each do |temp|
       puts "#{device} #{i} has PCB with p_id: #{temp.p_id}"
       print "File: #{temp.file_name} | "
-      print "Location Memory: #{temp.location_memory} | "
+      print "Location Memory (in hex): #{temp.location_memory} | "
       print "Cylinder Location: #{temp.cylinder_num} | " if "#{device}" == "disk"
       is_write = temp.read_or_write
       print "Read Or Write: #{temp.read_or_write} | "
       print "Size of file: #{temp.size_of_file} | " if is_write == 'w'
       print "Time spent this burst: #{temp.time_spent_in_cpu} | "
       print "The average burst time is #{temp.compute_average_burst_time} | "
-      print "Pages in Page Table: "
-      temp.pages_in_pcb.each {|x| print "#{x.page_id} "}
+        print "Page Table: "
+        temp.pages_in_pcb.each_with_index {|x, index| print "#{index} "}
       puts ""
     end
   end
@@ -120,58 +120,58 @@ class Disk < Device
       @processes_in_queue.each do |temp|
         puts "#{device} #{i} has PCB with p_id: #{temp.p_id}"
         print "File: #{temp.file_name} | "
-        print "Location Memory: #{temp.location_memory} | "
+        print "Location Memory (in hex): #{temp.location_memory} | "
         print "Cylinder Location: #{temp.cylinder_num} | " if "#{device}" == "disk"
         is_write = temp.read_or_write
         print "Read Or Write: #{temp.read_or_write} | "
         print "Size of file: #{temp.size_of_file} | " if is_write == 'w'
         print "The time spent on CPU is: #{temp.time_spent_in_cpu} | "
         print "The average burst time is #{temp.compute_average_burst_time} | "
-        print "Pages in Page Table: "
-        temp.pages_in_pcb.each {|x| print "#{x.page_id} "}
+        print "Page Table: "
+        temp.pages_in_pcb.each_with_index {|x, index| print "#{index} "}
         puts ""
       end
       @new_array.each do |temp|
         puts "#{device} #{i} has PCB with p_id: #{temp.p_id}"
         print "File: #{temp.file_name} | "
-        print "Location Memory: #{temp.location_memory} | "
+        print "Location Memory (in hex): #{temp.location_memory} | "
         print "Cylinder Location: #{temp.cylinder_num} | " if "#{device}" == "disk"
         is_write = temp.read_or_write
         print "Read Or Write: #{temp.read_or_write} | "
         print "Size of file: #{temp.size_of_file} | " if is_write == 'w'
         print "The time spent on CPU is: #{temp.time_spent_in_cpu} | "
         print "The average burst time is #{temp.compute_average_burst_time} | "
-        print "Pages in Page Table: "
-        temp.pages_in_pcb.each {|x| print "#{x.page_id} "}
+        print "Page Table: "
+        temp.pages_in_pcb.each_with_index {|x, index| print "#{index} "}
         puts ""
       end
     elsif @red_light == 1
       @new_array.each do |temp|
         puts "#{device} #{i} has PCB with p_id: #{temp.p_id}"
         print "File: #{temp.file_name} | "
-        print "Location Memory: #{temp.location_memory} | "
+        print "Location Memory (in hex): #{temp.location_memory} | "
         print "Cylinder Location: #{temp.cylinder_num} | " if "#{device}" == "disk"
         is_write = temp.read_or_write
         print "Read Or Write: #{temp.read_or_write} | "
         print "Size of file: #{temp.size_of_file} | " if is_write == 'w'
         print "The time spent on CPU is: #{temp.time_spent_in_cpu} | "
         print "The average burst time is #{temp.compute_average_burst_time} | "
-        print "Pages in Page Table: "
-        temp.pages_in_pcb.each {|x| print "#{x.page_id} "}
+        print "Page Table: "
+        temp.pages_in_pcb.each_with_index {|x, index| print "#{index} "}
         puts ""
       end
       @processes_in_queue.each do |temp|
         puts "#{device} #{i} has PCB with p_id: #{temp.p_id}"
         print "File: #{temp.file_name} | "
-        print "Location Memory: #{temp.location_memory} | "
+        print "Location Memory (in hex): #{temp.location_memory} | "
         print "Cylinder Location: #{temp.cylinder_num} | " if "#{device}" == "disk"
         is_write = temp.read_or_write
         print "Read Or Write: #{temp.read_or_write} | "
         print "Size of file: #{temp.size_of_file} | " if is_write == 'w'
         print "The time spent on CPU is: #{temp.time_spent_in_cpu} | "
         print "The average burst time is #{temp.compute_average_burst_time} | "
-        print "Pages in Page Table: "
-        temp.pages_in_pcb.each {|x| print "#{x.page_id} "}
+        print "Page Table: "
+        temp.pages_in_pcb.each_with_index {|x, index| print "#{index} "}
         puts ""
       end
     end
